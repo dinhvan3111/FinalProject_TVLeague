@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TVleague"
+            android:textSize="40sp"
+            android:textColor="#2196F3"
+            android:textStyle="bold"
+            android:layout_marginBottom="50dp"/>
+        <Button
+            android:id="@+id/btnAddClub"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Thêm đội bóng mới"/>
+        <Button
+            android:id="@+id/btnListAddedClub"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Đội bóng đã đăng ký"/>
+        <Button
+            android:id="@+id/btnCreateCalendar"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Bắt đầu lập lịch" />
+    </LinearLayout>
+</layout>
