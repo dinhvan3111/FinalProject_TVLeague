@@ -1,12 +1,18 @@
 package com.example.tvleague;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
+    int id;
     private String name;
     private String doB;
     private int type;
     private String note;
 
-    public Player(String name, String doB, int type, String note) {
+
+
+    public Player(int id, String name, String doB, int type, String note) {
+        this.id = id;
         this.name = name;
         this.doB = doB;
         this.type = type;
@@ -43,5 +49,11 @@ public class Player {
 
     public void setNote(String note) {
         this.note = note;
+    }public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -28,13 +29,51 @@ public class AddClubForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddClubFormBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        adapter = new PlayerAdapter(listAddedPlayer);
+        adapter = new PlayerAdapter(this,listAddedPlayer);
         binding.listAddedPlayer.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         binding.listAddedPlayer.setAdapter(adapter);
         binding.addPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 inputPlayer();
+            }
+        });
+        binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String clubName = binding.edtClubName.getText().toString();
+                String stadiumName = binding.edtClubStadium.getText().toString();
+                if(clubName.length() == 0 || stadiumName.length() == 0){
+                    Toast.makeText(AddClubForm.this, "Tên đội, sân nhà không thể bỏ trống!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if(DatabaseRoute.findIdByNameClub(clubName)==-1){
+                        if(listAddedPlayer.size() == 0){
+                            Toast.makeText(AddClubForm.this, "Vui lòng thêm cầu thủ!", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Club club = new Club(-1,clubName,stadiumName,-1);
+                            DatabaseRoute.addClub(club);
+                            ArrayList<Club> clubs = DatabaseRoute.getAllClub();
+
+                            int id_club = DatabaseRoute.findIdByNameClub(clubName);
+                            if(id_club!=-1){
+                                DatabaseRoute.addPlayersWithIdClub(listAddedPlayer,id_club);
+                                //ArrayList<Player> players = DatabaseRoute.getPlayersOfClubById(DatabaseRoute.findIdByNameClub(clubName));
+
+                                Intent addClubIntent = new Intent(AddClubForm.this,ClubRegistedActivity.class);
+                                startActivity(addClubIntent);
+                            }
+                            else{
+                                Toast.makeText(AddClubForm.this, "Thêm Đội bóng thất bại!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                    else{
+                        Toast.makeText(AddClubForm.this, "Tên đội đã được sử dụng!", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
             }
         });
     }
@@ -85,7 +124,7 @@ public class AddClubForm extends AppCompatActivity {
                     type = 1; // Cầu thủ nước ngoài
                 }
                 String note = layoutInputPlayerInfoBinding.editPlayerNote.getText().toString();
-                Player player = new Player(name,doB,type,note);
+                Player player = new Player(-1,name,doB,type,note);
                 listAddedPlayer.add(player);
                 adapter.notifyDataSetChanged();
                 for (int i =0; i < listAddedPlayer.size();i++){

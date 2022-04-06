@@ -1,22 +1,36 @@
 package com.example.tvleague;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tvleague.databinding.ActivityAddClubFormBinding;
 import com.example.tvleague.databinding.ItemPlayerRowBinding;
+import com.example.tvleague.databinding.LayoutInputPlayerInfoBinding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder> {
     private ArrayList<Player> listPlayer;
-
-    public PlayerAdapter(ArrayList<Player> listPlayer){
+    Context context;
+    int index = 0;
+    public PlayerAdapter(Context context, ArrayList<Player> listPlayer){
+        this.context = context;
         this.listPlayer = listPlayer;
     }
 
@@ -31,6 +45,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     @Override
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
         Player player = listPlayer.get(position);
+        index = holder.getAdapterPosition();
         if(player == null){
             return;
         }
@@ -44,6 +59,13 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             binding.tvType.setText("CT ngoại");
         }
         binding.tvNote.setText(player.getNote());
+        binding.itemPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlayerListActivity.editPlayer(player,holder.getAdapterPosition());
+            }
+        });
+
     }
 
     @Override
@@ -60,6 +82,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         private TextView tvType;
         private TextView tvNote;
         private ItemPlayerRowBinding binding;
+        private LinearLayout layout;
 
         public PlayerViewHolder(@NonNull ItemPlayerRowBinding binding) {
             super(binding.getRoot());
@@ -67,6 +90,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             tvDoB = binding.tvDoB;
             tvType = binding.tvType;
             tvNote = binding.tvNote;
+            layout = binding.itemPlayer;
             this.binding = binding;
         }
 
