@@ -6,8 +6,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context=".MainActivity">
+        tools:context=".view.MainActivity">
 
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/soccer_ball"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,5 +36,10 @@
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Bắt đầu lập lịch" />
+        <Button
+            android:id="@+id/btnLeagueManagement"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Quản lý giải đấu"/>
     </LinearLayout>
 </layout>

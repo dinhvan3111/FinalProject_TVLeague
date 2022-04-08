@@ -7,7 +7,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="20dp"
-        tools:context=".AddClubForm">
+        tools:context=".view.AddClubForm">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,22 +60,26 @@
                     android:layout_weight="2"
                     android:text="Tên cầu thủ"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
                 <TextView
                     android:layout_weight="1"
                     android:text="Ngày sinh"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
                 <TextView
                     android:layout_weight="1"
                     android:text="Loại"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
                 <TextView
                     android:layout_weight="1"
                     android:text="Ghi chú"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:gravity="center"/>
             </TableRow>
         </TableLayout>
         <ScrollView

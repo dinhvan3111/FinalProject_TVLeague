@@ -1,29 +1,19 @@
-package com.example.tvleague;
+package com.example.tvleague.model;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tvleague.databinding.ActivityAddClubFormBinding;
+import com.example.tvleague.view.PlayerListActivity;
 import com.example.tvleague.databinding.ItemPlayerRowBinding;
-import com.example.tvleague.databinding.LayoutInputPlayerInfoBinding;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder> {
     private ArrayList<Player> listPlayer;

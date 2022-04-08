@@ -1,11 +1,10 @@
-package com.example.tvleague;
+package com.example.tvleague.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +12,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 
-import com.example.tvleague.databinding.ActivityAddClubFormBinding;
 import com.example.tvleague.databinding.ActivityPlayerListBinding;
 import com.example.tvleague.databinding.LayoutInputPlayerInfoBinding;
+import com.example.tvleague.model.Club;
+import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.Player;
+import com.example.tvleague.model.PlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;

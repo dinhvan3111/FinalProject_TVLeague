@@ -1,4 +1,4 @@
-package com.example.tvleague;
+package com.example.tvleague.model;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,14 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tvleague.databinding.ItemListClubRowBinding;
+import com.example.tvleague.view.PlayerListActivity;
 import com.example.tvleague.databinding.ItemClubRowBinding;
-import com.example.tvleague.databinding.ItemPlayerRowBinding;
 
 import java.util.ArrayList;
 
@@ -34,6 +34,11 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ClubViewHolder
         return new ClubViewHolder(binding);
     }
 
+//    @Override
+//    public int getItemViewType(int position) {
+//        return super.getItemViewType(position);
+//    }
+
     @Override
     public void onBindViewHolder(@NonNull ClubAdapter.ClubViewHolder holder, int position) {
         Club club = listClub.get(position);
@@ -42,7 +47,7 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ClubViewHolder
         }
         ItemClubRowBinding binding = holder.getBinding();
         binding.tvClubName.setText(club.getName());
-        binding.tvClubId.setText(club.getId() + "");
+        binding.tvClubMemNum.setText(club.getListPlayers().size() + "");
         binding.tvStadium.setText(club.getStadium());
         binding.itemClub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +81,7 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ClubViewHolder
         public ClubViewHolder(@NonNull ItemClubRowBinding binding) {
             super(binding.getRoot());
             tvName = binding.tvClubName;
-            tvIdClub = binding.tvClubId;
+            tvIdClub = binding.tvClubMemNum;
             tvStadium = binding.tvStadium;
             layoutItem = binding.itemClub;
             this.binding = binding;
@@ -86,4 +91,11 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ClubViewHolder
             return binding;
         }
     }
+//    public class ClubRowViewHolder2 extends RecyclerView.ViewHolder{
+//        private ItemListClubRowBinding binding;
+//        public ClubRowViewHolder2(@NonNull ItemListClubRowBinding binding) {
+//            super(binding.getRoot());
+//            this.binding = binding;
+//        }
+//    }
 }

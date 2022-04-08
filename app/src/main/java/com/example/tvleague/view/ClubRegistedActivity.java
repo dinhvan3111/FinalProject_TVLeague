@@ -1,16 +1,14 @@
-package com.example.tvleague;
+package com.example.tvleague.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
-import com.example.tvleague.databinding.ActivityAddClubFormBinding;
 import com.example.tvleague.databinding.ActivityClubRegistedBinding;
-import com.example.tvleague.databinding.ItemPlayerRowBinding;
+import com.example.tvleague.model.Club;
+import com.example.tvleague.model.ClubAdapter;
+import com.example.tvleague.model.DatabaseRoute;
 
 import java.util.ArrayList;
 

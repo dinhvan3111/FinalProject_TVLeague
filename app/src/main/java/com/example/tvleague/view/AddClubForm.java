@@ -1,4 +1,4 @@
-package com.example.tvleague;
+package com.example.tvleague.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,10 +15,13 @@ import android.widget.Toast;
 
 import com.example.tvleague.databinding.ActivityAddClubFormBinding;
 import com.example.tvleague.databinding.LayoutInputPlayerInfoBinding;
+import com.example.tvleague.model.Club;
+import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.Player;
+import com.example.tvleague.model.PlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class AddClubForm extends AppCompatActivity {
     private ArrayList<Player> listAddedPlayer = new ArrayList<>();
@@ -52,7 +55,7 @@ public class AddClubForm extends AppCompatActivity {
                             Toast.makeText(AddClubForm.this, "Vui lòng thêm cầu thủ!", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Club club = new Club(-1,clubName,stadiumName,-1);
+                            Club club = new Club(-1,clubName,stadiumName,-1, listAddedPlayer);
                             DatabaseRoute.addClub(club);
                             ArrayList<Club> clubs = DatabaseRoute.getAllClub();
 
@@ -113,7 +116,7 @@ public class AddClubForm extends AppCompatActivity {
                 }
                 int type = 0;
                 String doB = layoutInputPlayerInfoBinding.editPlayerDoB.getText().toString();
-                if(name.equals("")){
+                if(doB.equals("")){
                     layoutInputPlayerInfoBinding.editPlayerDoB.setError("This field can not be blank");
                     return;
                 }

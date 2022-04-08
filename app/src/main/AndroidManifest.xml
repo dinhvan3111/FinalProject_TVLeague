@@ -10,16 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TVLeague">
         <activity
-            android:name=".PlayerListActivity"
+            android:name=".view.LeagueManagementActivity"
             android:exported="false" />
         <activity
-            android:name=".ClubRegistedActivity"
+            android:name=".view.PlayerListActivity"
             android:exported="false" />
         <activity
-            android:name=".AddClubForm"
+            android:name=".view.ClubRegistedActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.AddClubForm"
+            android:exported="false" />
+        <activity
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

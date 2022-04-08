@@ -1,4 +1,4 @@
-package com.example.tvleague;
+package com.example.tvleague.model;
 
 import java.io.Serializable;
 

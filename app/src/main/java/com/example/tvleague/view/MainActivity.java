@@ -1,4 +1,4 @@
-package com.example.tvleague;
+package com.example.tvleague.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(addedClubIntent);
             }
         });
+        binding.btnLeagueManagement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addedClubIntent = new Intent(MainActivity.this,LeagueManagementActivity.class);
+                startActivity(addedClubIntent);
+            }
+        });
     }
     private void copyDatabase(){
         try {
@@ -76,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
             copyDatabase();
             Toast.makeText(this, "Successfull copy!", Toast.LENGTH_SHORT).show();
         }
-        else{
-            dbFile.delete();
-            copyDatabase();
-        }
+//        else{
+//            dbFile.delete();
+//            copyDatabase();
+//        }
     }
 }

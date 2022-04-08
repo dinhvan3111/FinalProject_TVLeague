@@ -5,32 +5,46 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/row_player_info_border"
+        android:background="@drawable/row_club_border"
         android:id="@+id/itemClub">
 
         <TextView
             android:id="@+id/tvClubName"
             android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Tên Đội Bóng"
             android:textColor="@color/black"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
         <TextView
-            android:id="@+id/tvClubId"
+            android:id="@+id/tvClubMemNum"
             android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Mã Đội Bóng"
+            android:text="Số lượng cầu thủ"
             android:textColor="@color/black"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
         <TextView
             android:id="@+id/tvStadium"
             android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Sân nhà"
             android:textColor="@color/black"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:maxLines="1"/>
     </LinearLayout>
 </layout>

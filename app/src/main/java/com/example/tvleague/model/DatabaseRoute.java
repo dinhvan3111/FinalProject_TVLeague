@@ -1,9 +1,9 @@
-package com.example.tvleague;
+package com.example.tvleague.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import androidx.databinding.ObservableArrayList;
+import com.example.tvleague.view.MainActivity;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,8 @@ public class DatabaseRoute {
             int id = cursor.getInt(0);
             String name = cursor.getString(1);
             String stadium= cursor.getString(2);
-            Club club = new Club(id,name,stadium,index);
+            ArrayList<Player> listPlayers = getPlayersOfClubById(id);
+            Club club = new Club(id,name,stadium,index,listPlayers);
             index++;
             clubs.add(club);
         }
@@ -40,6 +41,7 @@ public class DatabaseRoute {
         cursor.close();
         return -1;
     }
+
     public static void addPlayersWithIdClub(ArrayList<Player> player, int id_club){
         for(int i = 0;i<player.size();i++){
             ContentValues cv = new ContentValues();
