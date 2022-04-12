@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tvPlayerName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Tên cầu thủ"
+        android:layout_weight="2"/>
+    <TextView
+        android:id="@+id/tvGoalType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Loại"/>
+    <TextView
+        android:id="@+id/tvGoalTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Phút"
+        android:layout_weight="1"/>
+</LinearLayout>

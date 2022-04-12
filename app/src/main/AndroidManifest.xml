@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TVLeague">
         <activity
+            android:name=".view.MatchDetail"
+            android:exported="false" />
+        <activity
             android:name=".view.LeagueManagementActivity"
             android:exported="false" />
         <activity
