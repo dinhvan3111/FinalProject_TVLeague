@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/mnu_update_score"
-        android:title="Cập nhật tỉ số"/>
-    <item
-        android:id="@+id/mnu_update_goals_club1"
-        android:title="Cập nhật bàn thằng đội 1"/>
-    <item
-        android:id="@+id/mnu_update_goals_club2"
-        android:title="Cập nhật bàn thắng đội 2"/>
+        android:id="@+id/mnu_update_result"
+        android:title="Cập nhật kết quả"/>
 </menu>

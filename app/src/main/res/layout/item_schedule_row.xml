@@ -3,7 +3,10 @@
     android:id="@+id/itemSchedule"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="20dp">
+    android:paddingVertical="20dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
     <LinearLayout
         android:id="@+id/linearLayoutTeams"
         android:layout_width="0dp"

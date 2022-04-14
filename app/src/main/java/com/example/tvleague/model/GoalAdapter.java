@@ -45,6 +45,13 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
         else{ // bàn thắng thường
             binding.tvGoalType.setVisibility(View.GONE);
         }
+        // Chỉnh sửa hoặc xoá bàn thắng
+        binding.itemGoalRow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return false;
+            }
+        });
     }
 
     @Override
