@@ -29,7 +29,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         this.schedules = schedules;
         this.context = context;
     }
-
+    public void setScheduleList(  ArrayList<Schedule> schedules){
+        this.schedules = schedules;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public ScheduleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,6 +54,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         binding.tvClub1.setText(schedule.getClub1().name);
         binding.tvClub2.setText(schedule.getClub2().name);
         binding.dateTime.setText(schedule.getDateTime());
+        if(schedule.getMatch().getScore() == null){
+            System.out.println(schedule.getMatch().getScore());
+            binding.tvClub1Score.setText(" ?");
+            binding.tvClub2Score.setText(" ?");
+        }
+        else{
+            binding.tvClub1Score.setText(schedule.getMatch().getListGoalClub1().size() + "");
+            binding.tvClub2Score.setText(schedule.getMatch().getListGoalClub2().size() + "");
+        }
         binding.itemSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

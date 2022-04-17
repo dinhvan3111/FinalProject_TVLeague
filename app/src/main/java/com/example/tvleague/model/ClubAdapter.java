@@ -47,7 +47,12 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ClubViewHolder
         }
         ItemClubRowBinding binding = holder.getBinding();
         binding.tvClubName.setText(club.getName());
-        binding.tvClubMemNum.setText(club.getListPlayers().size() + "");
+        if(club.getListPlayers() == null){
+            binding.tvClubMemNum.setText("0");
+        }
+        else{
+            binding.tvClubMemNum.setText(club.getListPlayers().size() + "");
+        }
         binding.tvStadium.setText(club.getStadium());
         binding.itemClub.setOnClickListener(new View.OnClickListener() {
             @Override

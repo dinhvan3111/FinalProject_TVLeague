@@ -82,6 +82,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
             <RadioGroup
+                android:id="@+id/radioTypeGoal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

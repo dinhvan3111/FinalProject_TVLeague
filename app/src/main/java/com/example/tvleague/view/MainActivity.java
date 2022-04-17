@@ -10,12 +10,21 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.tvleague.databinding.ActivityMainBinding;
+import com.example.tvleague.model.Club;
+import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.Match;
+import com.example.tvleague.model.Schedule;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
@@ -49,6 +58,62 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent addedClubIntent = new Intent(MainActivity.this,LeagueManagementActivity.class);
                 startActivity(addedClubIntent);
+            }
+        });
+        binding.btnCreateCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Schedule> listSchedules = new ArrayList<>();
+                ArrayList<String> round = new ArrayList<>();
+                ArrayList<String> first_leg = new ArrayList<>();
+                ArrayList<String> second_leg = new ArrayList<>();
+
+                ArrayList<Club> clubs = DatabaseRoute.getAllClub();
+                int sizeOfClub = clubs.size();
+                int arrSchedule [][]= getArraySchedule(clubs);
+                for (int i = 0; i<sizeOfClub - 1; i++){
+                    LocalDate now = LocalDate.now();
+                    String dt = now.toString();
+                    String dt_second_leg = now.toString();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    Calendar c = Calendar.getInstance();
+                    c.add(Calendar.DATE, (i+1)*7);  // number of days to add
+                    dt = sdf.format(c.getTime());  // dt is now the new date
+                    System.out.println("Vong: " + (i+1));
+                    for (int j = 0;j<sizeOfClub/2 ;j++){
+                        int MaDoiNha = j ;
+                        int MaDoiKhach = sizeOfClub - j - 1;
+                        String date;
+                        String date_2;//luot ve
+
+                        Calendar d = Calendar.getInstance();
+                        d.add(Calendar.DATE, (i+1 + sizeOfClub)*7);  // number of days to add
+                        dt_second_leg = sdf.format(d.getTime());
+                        if(j < sizeOfClub/4){
+                            c.add(Calendar.DATE, 1);  // number of days to add
+                            dt = sdf.format(c.getTime());  // dt is now the new date
+                            d.add(Calendar.DATE, 1);  // number of days to add
+                            dt_second_leg = sdf.format(d.getTime());
+                        }
+
+
+
+                        if(j % 2 == 0){
+                         date = "17:00 " + dt;
+                         date_2 = "17:00 " + dt_second_leg;
+                        }
+                        else {
+                            date = "19:00 " + dt;
+                            date_2 = "19:00 " + dt_second_leg;
+                        }
+                        DatabaseRoute.addToSchedule(i+1,arrSchedule[i][MaDoiNha],arrSchedule[i][MaDoiKhach],date);
+                        int id_schedule_first = DatabaseRoute.getIdScheduleByTwoIdClub(arrSchedule[i][MaDoiNha],arrSchedule[i][MaDoiKhach]);
+                        DatabaseRoute.addToMatch(id_schedule_first,null);
+                        DatabaseRoute.addToSchedule(i+sizeOfClub,arrSchedule[i][MaDoiKhach],arrSchedule[i][MaDoiNha],date_2);
+                        int id_schedule_second = DatabaseRoute.getIdScheduleByTwoIdClub(arrSchedule[i][MaDoiKhach],arrSchedule[i][MaDoiNha]);
+                        DatabaseRoute.addToMatch(id_schedule_second,null);
+                    }
+                }
             }
         });
     }
@@ -87,5 +152,25 @@ public class MainActivity extends AppCompatActivity {
 //            dbFile.delete();
 //            copyDatabase();
 //        }
+    }
+    private int[][] getArraySchedule(ArrayList<Club> clubs){
+        int sizeOfClub = clubs.size();
+        int arrSchedule[][] = new int[sizeOfClub - 1][sizeOfClub];
+        for (int i = 0; i<sizeOfClub - 1; i++){
+            for (int j = 0;j<sizeOfClub;j++){
+                if(j == 0){
+                    arrSchedule[i][j] = 1;
+                }
+                else{
+                    if(j>i){
+                        arrSchedule[i][j] = j - i + 1;
+                    }
+                    else{
+                        arrSchedule[i][j] = sizeOfClub - (i - j);
+                    }
+                }
+            }
+        }
+        return arrSchedule;
     }
 }

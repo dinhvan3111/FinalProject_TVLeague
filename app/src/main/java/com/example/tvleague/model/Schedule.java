@@ -10,12 +10,13 @@ public class Schedule implements Serializable {
     private Club club2;
     private Match match;
 
-    public Schedule(String stadium, String dateTime, int round, Club club1, Club club2) {
+    public Schedule(String stadium, String dateTime, int round, Club club1, Club club2,Match match) {
         this.stadium = stadium;
         this.dateTime = dateTime;
         this.round = round;
         this.club1 = club1;
         this.club2 = club2;
+        this.match = match;
     }
 
     public String getStadium() {

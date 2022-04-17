@@ -46,9 +46,13 @@
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_add_club_form.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_club_registed.xml" value="0.28732394366197184" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_match_detail.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_player_list.xml" value="0.1" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/fragment_schedule.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_club_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_player_row.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_schedule_row.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/layout_add_goal.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/layout_input_player_info.xml" value="0.25416666666666665" />
       </map>
     </option>

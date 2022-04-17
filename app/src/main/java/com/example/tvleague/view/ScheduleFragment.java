@@ -9,10 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.tvleague.R;
 import com.example.tvleague.databinding.FragmentScheduleBinding;
 import com.example.tvleague.model.Club;
+import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.Match;
 import com.example.tvleague.model.Player;
 import com.example.tvleague.model.Schedule;
 import com.example.tvleague.model.ScheduleAdapter;
@@ -34,6 +39,7 @@ public class ScheduleFragment extends Fragment {
     private FragmentScheduleBinding binding;
     private ArrayList<Schedule> listSchedules;
     private ScheduleAdapter scheduleAdapter;
+    private ArrayList<String> round;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -67,14 +73,22 @@ public class ScheduleFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Club club1 = new Club(1,"Manchester United", "Old Trafold", 1,null);
-        Club club2 = new Club(1,"Manchester City", "Etihad", 1,null);
         listSchedules = new ArrayList<>();
-        listSchedules.add(new Schedule(club1.getStadium(), "Sat, Apr 16 21:00", 1, club1,club2));
-        listSchedules.add(new Schedule(club1.getStadium(), "Sat, Apr 16 22:00", 1, club1,club2));
-        listSchedules.add(new Schedule(club1.getStadium(), "Sat, Apr 16 23:00", 1, club1,club2));
-        listSchedules.add(new Schedule(club1.getStadium(), "Sat, Apr 16 00:00", 1, club1,club2));
-        listSchedules.add(new Schedule(club1.getStadium(), "Sat, Apr 16 01:00", 1, club1,club2));
+        listSchedules = DatabaseRoute.getMatchByRound( 1);
+        round = new ArrayList<>();
+        ArrayList<String> first_leg = new ArrayList<>();
+        ArrayList<String> second_leg = new ArrayList<>();
+//
+        ArrayList<Club> clubs = DatabaseRoute.getAllClub();
+        int sizeOfClub = clubs.size();
+        for (int i = 0; i<sizeOfClub - 1; i++){
+            int round_in_first_leg = i + 1;
+            int round_in_second_leg = i + sizeOfClub;
+            first_leg.add("Vòng " + round_in_first_leg);
+            second_leg.add("Vòng " + round_in_second_leg);
+        }
+        round.addAll(first_leg);
+        round.addAll(second_leg);
         setHasOptionsMenu(true);
     }
 
@@ -85,8 +99,26 @@ public class ScheduleFragment extends Fragment {
         this.binding = FragmentScheduleBinding.inflate(inflater,container,false);
         scheduleAdapter = new ScheduleAdapter(getContext(),listSchedules);
         binding.rvMatches.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+
         binding.rvMatches.setAdapter(scheduleAdapter);
         binding.rvMatches.addItemDecoration(new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL));
+        ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,round);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.roundSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                listSchedules = DatabaseRoute.getMatchByRound(i + 1);
+                scheduleAdapter.setScheduleList(listSchedules);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        binding.roundSpinner.setAdapter(adapter);
         return binding.getRoot();
     }
+
 }
