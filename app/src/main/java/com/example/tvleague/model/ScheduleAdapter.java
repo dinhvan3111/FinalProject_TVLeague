@@ -55,7 +55,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         binding.tvClub2.setText(schedule.getClub2().name);
         binding.dateTime.setText(schedule.getDateTime());
         if(schedule.getMatch().getScore() == null){
-            System.out.println(schedule.getMatch().getScore());
             binding.tvClub1Score.setText(" ?");
             binding.tvClub2Score.setText(" ?");
         }
@@ -98,4 +97,5 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             return binding;
         }
     }
+
 }

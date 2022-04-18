@@ -50,10 +50,12 @@
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_player_list.xml" value="0.1" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/fragment_schedule.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_club_row.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_goal_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_player_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/item_schedule_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/layout_add_goal.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/layout_input_player_info.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/menu/update_match_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

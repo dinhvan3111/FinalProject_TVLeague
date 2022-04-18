@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         database = openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if(DatabaseRoute.IsStartLeague() == true)
+            binding.btnCreateCalendar.setEnabled(false);
         binding.btnAddClub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
                         DatabaseRoute.addToMatch(id_schedule_second,null);
                     }
                 }
+                DatabaseRoute.startLeague();//bat dau giai
+                binding.btnCreateCalendar.setEnabled(false);
+                Toast.makeText(MainActivity.this, "Giải đấu đã bắt đầu!", Toast.LENGTH_SHORT).show();
             }
         });
     }

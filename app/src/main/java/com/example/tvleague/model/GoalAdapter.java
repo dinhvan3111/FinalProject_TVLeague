@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +22,10 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
         this.listGoal = listGoal;
         this.context = context;
     }
-
+    public void setGoalList(  ArrayList<Goal> Goal){
+        this.listGoal = Goal;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public GoalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,12 +39,12 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
         Goal goal = listGoal.get(position);
         ItemGoalRowBinding binding = holder.getBinding();
         binding.tvPlayerName.setText(goal.getPlayer().getName());
-        binding.tvGoalTime.setText(goal.getTime());
+        binding.tvGoalTime.setText(goal.getTime() + "'");
         if(goal.getType() == 1){ // Penalty
-            binding.tvGoalType.setText("(P),");
+            binding.tvGoalType.setText("(P)");
         }
         else if(goal.getType() == 2){ // Phản lưới nhà
-            binding.tvGoalType.setText("(OG), ");
+            binding.tvGoalType.setText("(OG)");
         }
         else{ // bàn thắng thường
             binding.tvGoalType.setVisibility(View.GONE);

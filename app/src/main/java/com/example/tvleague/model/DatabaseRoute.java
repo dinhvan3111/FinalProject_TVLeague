@@ -99,6 +99,16 @@ public class DatabaseRoute {
         }
         return players;
     }
+    public static int getIdMatchBySchedule(int id){
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from TranDau where MaLichThiDau = ?",
+                        new String[] {String.valueOf(id)});
+        while(cursor.moveToNext()){
+            return cursor.getInt(0);
+        }
+        cursor.close();
+        return -1;
+    }
     public static void updatePlayer(Player player){
         ContentValues cv = new ContentValues();
         cv.put("TenCauThu",player.getName());
@@ -134,6 +144,17 @@ public class DatabaseRoute {
             String dob = cursor.getString(2);
             String note = cursor.getString(4);
             return  new Player(id,name,dob,type,note);
+        }
+        cursor.close();
+        return null;
+    }
+    public static String getScoreByIdSchedule(int id){
+        int id_match = getIdMatchBySchedule(id);
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from TranDau where MaTranDau = ?",
+                        new String[] {String.valueOf(id_match)});
+        while(cursor.moveToNext()){
+            return cursor.getString(1);
         }
         cursor.close();
         return null;
@@ -177,6 +198,13 @@ public class DatabaseRoute {
         cv.put("TiSo",TiSo);
         MainActivity.database.insert("TranDau",null,cv);
     }
+    public static void updateScore(int MaLichThiDau, String TiSo){
+        ContentValues cv = new ContentValues();
+        int id_match = getIdMatchBySchedule(MaLichThiDau);
+        cv.put("MaLichThiDau",MaLichThiDau);
+        cv.put("TiSo",TiSo);
+        MainActivity.database.update("TranDau", cv, "MaTranDau = ?", new String[]{id_match + ""});
+    }
     public static ObservableArrayList<Goal> getListGoal(int id_match, int id_club){
         ObservableArrayList<Goal> goals = new ObservableArrayList<>();
         Cursor cursor = MainActivity.database
@@ -197,6 +225,16 @@ public class DatabaseRoute {
         ContentValues cv = new ContentValues();
         cv.put("BatDau", 1);
         MainActivity.database.update("BatDauGiaiDau", cv, "BatDau = ?", new String[]{0 + ""});
+    }
+    public static boolean IsStartLeague(){
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from BatDauGiaiDau where BatDau = ?",
+                        new String[] {String.valueOf(0)});
+        while(cursor.moveToNext()){
+            return false;
+        }
+        cursor.close();
+        return true;
     }
     public static ObservableArrayList<Integer> get2IdClubByIdSchedule(int id){
         ObservableArrayList<Integer> clubs = new ObservableArrayList<>();
@@ -221,20 +259,11 @@ public class DatabaseRoute {
             ObservableArrayList<Integer> clubs = get2IdClubByIdSchedule(MaLichThiDau);
             ObservableArrayList<Goal> listGoalHome = getListGoal(id,clubs.get(0));
             ObservableArrayList<Goal> listGoalAway = getListGoal(id,clubs.get(1));
-            return new Match(id,score,listGoalHome,listGoalAway);
+            Match match = new Match(id,score,listGoalHome,listGoalAway);
+            return match;
         }
         cursor.close();
         return null;
-    }
-    public static int getIdMatchBySchedule(int id){
-        Cursor cursor = MainActivity.database.
-                rawQuery("select * from TranDau where MaLichThiDau = ?",
-                        new String[] {String.valueOf(id)});
-        while(cursor.moveToNext()){
-            return cursor.getInt(0);
-        }
-        cursor.close();
-        return -1;
     }
     public static ArrayList<Schedule> getMatchByRound(int round){
         ArrayList<Schedule> schedules = new ArrayList<>();
@@ -270,7 +299,6 @@ public class DatabaseRoute {
     public static ObservableArrayList<String> getPlayersByClubName(String name){
         int id = getIdClubByName(name);
         ObservableArrayList<String> players = new ObservableArrayList<>();
-        System.out.println("MaDoi: " + id);
         Cursor cursor = MainActivity.database.
                 rawQuery("select * from CauThu where MaDoiBong = ?",
                         new String[] {String.valueOf(id)});

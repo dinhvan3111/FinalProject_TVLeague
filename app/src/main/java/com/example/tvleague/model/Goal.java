@@ -1,6 +1,8 @@
 package com.example.tvleague.model;
 
-public class Goal {
+import java.io.Serializable;
+
+public class Goal implements Serializable {
     private Player player;
     private int time;
     private int type;

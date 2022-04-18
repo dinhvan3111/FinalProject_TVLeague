@@ -40,6 +40,7 @@ public class ScheduleFragment extends Fragment {
     private ArrayList<Schedule> listSchedules;
     private ScheduleAdapter scheduleAdapter;
     private ArrayList<String> round;
+    int const_round = 1;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -107,7 +108,7 @@ public class ScheduleFragment extends Fragment {
         binding.roundSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                const_round = i + 1;
                 listSchedules = DatabaseRoute.getMatchByRound(i + 1);
                 scheduleAdapter.setScheduleList(listSchedules);
             }
@@ -121,4 +122,10 @@ public class ScheduleFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        listSchedules = DatabaseRoute.getMatchByRound(const_round );
+        scheduleAdapter.setScheduleList(listSchedules);
+    }
 }

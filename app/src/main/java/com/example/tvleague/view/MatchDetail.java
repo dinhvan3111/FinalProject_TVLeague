@@ -41,6 +41,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     private Schedule schedule;
     private int timeScore;
     private int id_match;//Ma Tran Dau
+    private Match matchResult;
     ObservableArrayList<String> NameOfPlayers = new ObservableArrayList<>();
     ObservableArrayList<Integer> typeGoal = new ObservableArrayList<>();
     ObservableArrayList<String> NameOfClub = new ObservableArrayList<>();
@@ -48,6 +49,13 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.update_match_menu,menu);
+        return true;
+    }
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        if (schedule.getMatch().getScore() != null) {
+            menu.getItem(1).setEnabled(false);
+        }
         return true;
     }
     @Override
@@ -78,6 +86,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         NameOfClub.clear();
                         NameOfClub.add(NameTwoClub.get(i));
+                        NameOfClub.add(NameTwoClub.get(1 - i));
                         NameOfPlayers = DatabaseRoute.getPlayersByClubName(NameTwoClub.get(i));
                         adapterPlayers[0] =  new ArrayAdapter(layoutAddGoalBinding.getRoot().getContext(),
                                 android.R.layout.simple_list_item_1,NameOfPlayers);
@@ -111,20 +120,41 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                     @Override
                     public void onClick(View view) {
                         String club = NameOfClub.get(0);
-                        String player_name = NameOfPlayers.get(0);
+                        String clubOther = NameOfClub.get(1);//dùng khi là bàn thắng phản lưới, ghi nhận cho đọi kia.
+                        String player_name = choosePlayer.get(0);
                         Player player = DatabaseRoute.getPlayerByName(player_name);
                         int id_club = DatabaseRoute.getIdClubByName(club);
+                        int id_club_other = DatabaseRoute.getIdClubByName(clubOther);
                         int type_goal = 0;
                         if(typeGoal.size() != 0){
                             type_goal = typeGoal.get(0);
                         }
                         Goal goal;
-                        if(type_goal!=3){//không phản lưới nhà
+                        if(type_goal!=2){//không phản lưới nhà
                             goal = new Goal(player,timeScore,type_goal,id_club,id_match);
-                            DatabaseRoute.addToGoal(goal);
                         }
                         else{//phản lưới nhà
+                            System.out.println("Phan luoi: " + player.getName());
+                            System.out.println("Phan luoi ten: " + player_name);
+                            goal = new Goal(player,timeScore,type_goal,id_club_other,id_match);
                         }
+                        DatabaseRoute.addToGoal(goal);
+                        int id_club1 = DatabaseRoute.getIdClubByName(NameTwoClub.get(0));
+                        int id_club2 = DatabaseRoute.getIdClubByName(NameTwoClub.get(1));
+                        ObservableArrayList<Goal> goal1 = DatabaseRoute.getListGoal(id_match,id_club1);
+                        ObservableArrayList<Goal> goal2 = DatabaseRoute.getListGoal(id_match,id_club2);
+                        String score = goal1.size() + " - " + goal2.size();
+                        int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(id_club1,id_club2);
+                        DatabaseRoute.updateScore(id_schedule,score);
+                        binding.tvScore.setText(score);
+
+//                        matchResult.getListGoalClub1().clear();
+//                        matchResult.getListGoalClub1().addAll(goal1);
+//                        matchResult.getListGoalClub2().clear();
+//                        matchResult.getListGoalClub2().addAll(goal2);
+                        club1GoalAdapter.setGoalList(goal1);
+                        club2GoalAdapter.setGoalList(goal2);
+
                     }
                 });
                 // Chon phút ghi bàn
@@ -153,6 +183,11 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         }
                     }
                 });
+                break;
+            case R.id.mnu_no_goal:
+                int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(schedule.getClub1().getId(),schedule.getClub2().getId());
+                DatabaseRoute.updateScore(id_schedule,"0-0");
+                binding.tvScore.setText("0-0");
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -201,9 +236,8 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         binding = ActivityMatchDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         schedule = (Schedule) getIntent().getSerializableExtra("Schedule");
-        Match matchResult = schedule.getMatch();
+        matchResult = schedule.getMatch();
         id_match = matchResult.getId();
-        System.out.println("Id match: " + id_match);
         // Nếu trận đấu chưa diên ra
         if(matchResult.getScore() == null){
             binding.tvScore.setText("? - ?");
@@ -221,6 +255,8 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         binding.tvClub1Name.setText(schedule.getClub1().getName());
         binding.tvClub2Name.setText(schedule.getClub2().getName());
         binding.tvStadium.setText(schedule.getStadium());
+        binding.rvListGoalClub1.setAdapter(club1GoalAdapter);
+        binding.rvListGoalClub2.setAdapter(club2GoalAdapter);
         //tach ngay gio
         String time[] = schedule.getDateTime().split(" ");
         binding.tvDate.setText(time[1]);
@@ -230,5 +266,11 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     @Override
     public void onValueChange(NumberPicker numberPicker, int i, int i1) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("Nhan resume o matchdetail");
     }
 }

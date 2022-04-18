@@ -3,4 +3,7 @@
     <item
         android:id="@+id/mnu_update_result"
         android:title="Cập nhật kết quả"/>
+    <item
+        android:id="@+id/mnu_no_goal"
+        android:title="Hòa không bàn thắng"/>
 </menu>
