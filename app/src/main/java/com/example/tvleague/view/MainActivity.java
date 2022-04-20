@@ -39,8 +39,11 @@ public class MainActivity extends AppCompatActivity {
         database = openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        if(DatabaseRoute.IsStartLeague() == true)
+        if(DatabaseRoute.IsStartLeague() == true){
             binding.btnCreateCalendar.setEnabled(false);
+            binding.btnAddClub.setEnabled(false);
+            binding.btnListAddedClub.setEnabled(false);
+        }
         binding.btnAddClub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

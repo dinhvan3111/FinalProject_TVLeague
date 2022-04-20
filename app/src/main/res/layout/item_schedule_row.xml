@@ -52,13 +52,29 @@
                 android:textColor="@color/black"/>
         </LinearLayout>
     </LinearLayout>
-    <TextView
-        android:id="@+id/dateTime"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sat, Apr 16 21:00"
-        android:layout_weight="2"
-        android:maxLines="2"
-        android:textColor="@color/black"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/hourTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="21:00"
+        android:gravity="center"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/dayTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="28/08/2022"
+        android:gravity="center"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

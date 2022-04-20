@@ -51,8 +51,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         binding.tvNote.setText(player.getNote());
         binding.itemPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                PlayerListActivity.editPlayer(player,holder.getAdapterPosition());
+            public void onClick(View view) { PlayerListActivity.editPlayer(player,holder.getAdapterPosition());
             }
         });
 

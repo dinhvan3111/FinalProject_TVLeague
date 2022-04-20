@@ -53,7 +53,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         ItemScheduleRowBinding binding = holder.getBinding();
         binding.tvClub1.setText(schedule.getClub1().name);
         binding.tvClub2.setText(schedule.getClub2().name);
-        binding.dateTime.setText(schedule.getDateTime());
+
+
+        //tach ngay gio
+        String time[] = schedule.getDateTime().split(" ");
+        binding.dayTime.setText(time[1]);
+        binding.hourTime.setText(time[0]);
         if(schedule.getMatch().getScore() == null){
             binding.tvClub1Score.setText(" ?");
             binding.tvClub2Score.setText(" ?");

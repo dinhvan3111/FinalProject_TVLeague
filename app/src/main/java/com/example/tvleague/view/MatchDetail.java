@@ -6,6 +6,7 @@ import androidx.databinding.ObservableArrayList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,16 +36,18 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class MatchDetail extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
-    private ActivityMatchDetailBinding binding;
-    private GoalAdapter club1GoalAdapter;
-    private GoalAdapter club2GoalAdapter;
-    private Schedule schedule;
-    private int timeScore;
-    private int id_match;//Ma Tran Dau
+    public static ActivityMatchDetailBinding binding;
+    public static GoalAdapter club1GoalAdapter;
+    public static GoalAdapter club2GoalAdapter;
+    public static Schedule schedule;
+    public static int timeScore;
+    public static int id_match;//Ma Tran Dau
     private Match matchResult;
-    ObservableArrayList<String> NameOfPlayers = new ObservableArrayList<>();
-    ObservableArrayList<Integer> typeGoal = new ObservableArrayList<>();
-    ObservableArrayList<String> NameOfClub = new ObservableArrayList<>();
+    public static ObservableArrayList<String> NameOfPlayers = new ObservableArrayList<>();
+    public static ObservableArrayList<Integer> typeGoal = new ObservableArrayList<>();
+    public static ObservableArrayList<String> NameOfClub = new ObservableArrayList<>();
+    public static ObservableArrayList<String> choosePlayer = new ObservableArrayList<>();
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -102,7 +105,6 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
 
 
                 //chọn cầu thủ
-                ObservableArrayList<String> choosePlayer = new ObservableArrayList<>();
                 layoutAddGoalBinding.spinnerPlayerGoal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -131,12 +133,10 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         }
                         Goal goal;
                         if(type_goal!=2){//không phản lưới nhà
-                            goal = new Goal(player,timeScore,type_goal,id_club,id_match);
+                            goal = new Goal(-1,player,timeScore,type_goal,id_club,id_match);
                         }
                         else{//phản lưới nhà
-                            System.out.println("Phan luoi: " + player.getName());
-                            System.out.println("Phan luoi ten: " + player_name);
-                            goal = new Goal(player,timeScore,type_goal,id_club_other,id_match);
+                            goal = new Goal(-1,player,timeScore,type_goal,id_club_other,id_match);
                         }
                         DatabaseRoute.addToGoal(goal);
                         int id_club1 = DatabaseRoute.getIdClubByName(NameTwoClub.get(0));
@@ -148,12 +148,8 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         DatabaseRoute.updateScore(id_schedule,score);
                         binding.tvScore.setText(score);
 
-//                        matchResult.getListGoalClub1().clear();
-//                        matchResult.getListGoalClub1().addAll(goal1);
-//                        matchResult.getListGoalClub2().clear();
-//                        matchResult.getListGoalClub2().addAll(goal2);
-                        club1GoalAdapter.setGoalList(goal1);
                         club2GoalAdapter.setGoalList(goal2);
+                        club1GoalAdapter.setGoalList( goal1);
 
                     }
                 });
@@ -161,7 +157,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                 layoutAddGoalBinding.iconTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        show(layoutAddGoalBinding);
+                        show(layoutAddGoalBinding,0);
                     }
                 });
 
@@ -194,10 +190,9 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     }
 
     // Hàm show dialog TimePicker
-    public void show(LayoutAddGoalBinding layoutAddGoalBinding)
+    public void show(LayoutAddGoalBinding layoutAddGoalBinding, int currentTime)
     {
-
-        final Dialog d = new Dialog(MatchDetail.this);
+        Dialog d = new Dialog(binding.getRoot().getContext());
         d.setTitle("NumberPicker");
         d.setContentView(R.layout.timer_dialog);
         d.setCancelable(true);
@@ -208,8 +203,9 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
         np.setMaxValue(96);
         np.setMinValue(0);
+        np.setValue(currentTime);
         np.setWrapSelectorWheel(true);
-        np.setOnValueChangedListener(this);
+        //np.setOnValueChangedListener(this);
         b1.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -238,6 +234,13 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         schedule = (Schedule) getIntent().getSerializableExtra("Schedule");
         matchResult = schedule.getMatch();
         id_match = matchResult.getId();
+
+
+        binding.rvListGoalClub1.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
+        binding.rvListGoalClub2.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
+
+        club1GoalAdapter = new GoalAdapter(matchResult.getListGoalClub1(),getApplicationContext());
+        club2GoalAdapter = new GoalAdapter(matchResult.getListGoalClub2(),getApplicationContext());
         // Nếu trận đấu chưa diên ra
         if(matchResult.getScore() == null){
             binding.tvScore.setText("? - ?");
@@ -246,10 +249,6 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         // Nếu trận đấu đã kết thúc
         else{
             binding.tvScore.setText(matchResult.getScore());
-            binding.rvListGoalClub1.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
-            binding.rvListGoalClub2.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
-            club1GoalAdapter = new GoalAdapter(matchResult.getListGoalClub1(),getApplicationContext());
-            club2GoalAdapter = new GoalAdapter(matchResult.getListGoalClub2(),getApplicationContext());
             binding.tvState.setText("Kết thúc");
         }
         binding.tvClub1Name.setText(schedule.getClub1().getName());

@@ -8,13 +8,22 @@ public class Goal implements Serializable {
     private int type;
     private int MaDoiBong;
     private int MaTranDau;
-
-    public Goal(Player player, int time, int type, int maDoiBong, int maTranDau) {
+    private int id;
+    public Goal(int id,Player player, int time, int type, int maDoiBong, int maTranDau) {
+        this.id = id;
         this.player = player;
         this.time = time;
         this.type = type;
         this.MaDoiBong = maDoiBong;
         this.MaTranDau = maTranDau;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getMaTranDau() {

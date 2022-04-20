@@ -192,6 +192,15 @@ public class DatabaseRoute {
         cv.put("MaDoiBong",goal.getMaDoiBong());
         MainActivity.database.insert("BanThang",null,cv);
     }
+    public static void updateGoal(Goal goal){
+        ContentValues cv = new ContentValues();
+        cv.put("MaTranDau", goal.getMaTranDau());
+        cv.put("MaCauThu",goal.getPlayer().getId());
+        cv.put("MaLoaiBanThang",goal.getType());
+        cv.put("ThoiDiemGhiBan",goal.getTime());
+        cv.put("MaDoiBong",goal.getMaDoiBong());
+        MainActivity.database.update("BanThang",cv,"MaBanThang=?",new String[]{goal.getId() + ""});
+    }
     public static void addToMatch(int MaLichThiDau, String TiSo){
         ContentValues cv = new ContentValues();
         cv.put("MaLichThiDau",MaLichThiDau);
@@ -211,11 +220,12 @@ public class DatabaseRoute {
                 .rawQuery("select  * from BanThang " +
                         "where MaTranDau = " +  id_match + " and MaDoiBong = " + id_club, null);
         while(cursor.moveToNext()){
+            int MaBanThang = cursor.getInt(0);
             int MaCauThu = cursor.getInt(2);
             int MaLoaiBanThang = cursor.getInt(3);
             int ThoiDiemGhiBan = cursor.getInt(4);
             Player player = getPlayerById(MaCauThu);
-            Goal goal = new Goal(player,ThoiDiemGhiBan,MaLoaiBanThang,id_club,id_match);
+            Goal goal = new Goal(MaBanThang,player,ThoiDiemGhiBan,MaLoaiBanThang,id_club,id_match);
             goals.add(goal);
         }
         cursor.close();
@@ -271,18 +281,19 @@ public class DatabaseRoute {
         Cursor cursor = MainActivity.database.
                 rawQuery("select * from LichThiDau where VongDau = ?",
                         new String[] {String.valueOf(round)});
-        while(cursor.moveToNext()){
-           int MaLichThiDau = cursor.getInt(0);
-           int DoiNha = cursor.getInt(2);
-           int DoiKhach = cursor.getInt(3);
-           String date = cursor.getString(4);
-           Club club1 = getClubById(DoiNha);
-           Club club2 = getClubById(DoiKhach);
-           int id_match = getIdMatchBySchedule(MaLichThiDau);
-           Match match = getMatchById(id_match);
-           schedule = new Schedule(club1.getStadium(),date,round,club1,club2,match);
-           schedules.add(schedule);
+        while(cursor.moveToNext()) {
+            int MaLichThiDau = cursor.getInt(0);
+            int DoiNha = cursor.getInt(2);
+            int DoiKhach = cursor.getInt(3);
+            String date = cursor.getString(4);
+            Club club1 = getClubById(DoiNha);
+            Club club2 = getClubById(DoiKhach);
+            int id_match = getIdMatchBySchedule(MaLichThiDau);
+            Match match = getMatchById(id_match);
+            schedule = new Schedule(club1.getStadium(), date, round, club1, club2, match);
+            schedules.add(schedule);
         }
+
         cursor.close();
         return schedules;
     }
@@ -328,5 +339,10 @@ public class DatabaseRoute {
         }
         cursor.close();
         return -1;
+    }
+    public static void deleteGoalById(int id){
+        int res = MainActivity.database.delete("BanThang","MaBanThang=?",new String[]{id+""});
+
+        System.out.println("res: "  + res);
     }
 }
