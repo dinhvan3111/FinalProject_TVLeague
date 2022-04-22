@@ -33,10 +33,12 @@ import java.util.Observable;
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder> {
     private ObservableArrayList<Goal> listGoal;
     private Context context;
+    private static GoalRecyclerViewClickListener itemListener;
 
-    public GoalAdapter(ObservableArrayList<Goal> listGoal, Context context) {
+    public GoalAdapter(ObservableArrayList<Goal> listGoal, Context context, GoalRecyclerViewClickListener itemListener) {
         this.listGoal = listGoal;
         this.context = context;
+        this.itemListener = itemListener;
     }
     public void setGoalList(  ObservableArrayList<Goal> Goal){
         this.listGoal = Goal;
@@ -277,10 +279,12 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
                 DatabaseRoute.updateScore(MaLichThiDau,score);
                 MatchDetail.binding.tvScore.setText(score);
                 Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
+                itemListener.goalRecyclerViewListClicked(true);
             }
         });
         b.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                itemListener.goalRecyclerViewListClicked(false);
                 dialog.cancel();
             }
         });

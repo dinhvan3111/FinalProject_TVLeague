@@ -9,6 +9,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Tên cầu thủ"
+        android:textSize="13sp"
         android:layout_weight="4"/>
 
     <TextView
@@ -17,11 +18,13 @@
         android:layout_height="wrap_content"
         android:text="Phút"
         android:paddingLeft="5dp"
+        android:textSize="13sp"
         android:layout_weight="1"/>
     <TextView
         android:id="@+id/tvGoalType"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Loại"
+        android:textSize="13sp"
         android:layout_weight="1"/>
 </LinearLayout>

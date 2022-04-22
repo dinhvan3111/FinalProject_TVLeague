@@ -1,15 +1,28 @@
 package com.example.tvleague.view;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import com.example.tvleague.R;
 import com.example.tvleague.databinding.FragmentRankingBinding;
+import com.example.tvleague.model.Club;
+import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.RankingClub;
+import com.example.tvleague.model.RankingClubAdapter;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +36,10 @@ public class RankingFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private FragmentRankingBinding binding;
+    private ArrayList<RankingClub> rankingClubs;
+    private ArrayList<String> dates;
+    private RankingClubAdapter rankingClubAdapter;
+    int date_index;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -57,6 +74,13 @@ public class RankingFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        dates = DatabaseRoute.getAllRankReportDate();
+
+        // Ngày báo cáo xếp hạng được chọn hiện tại
+        date_index = dates.size() -1;
+        for (String date : dates){
+            System.out.println(date);
+        }
     }
 
     @Override
@@ -64,6 +88,35 @@ public class RankingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.binding = FragmentRankingBinding.inflate(inflater,container,false);
+        ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,dates);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.roundSpinner.setAdapter(adapter);
+        binding.roundSpinner.setSelection(dates.size() -1);
+        binding.roundSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                date_index = i;
+                rankingClubs = DatabaseRoute.getRankingByDate(dates.get(i));
+                rankingClubAdapter.setRankingClubs(rankingClubs);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        rankingClubAdapter = new RankingClubAdapter(rankingClubs);
+        binding.rvClubRanking.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        binding.rvClubRanking.setAdapter(rankingClubAdapter);
+        binding.rvClubRanking.addItemDecoration(new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL));
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.roundSpinner.setSelection(dates.size() -1);
+        rankingClubs = DatabaseRoute.getRankingByDate(dates.get(date_index));
+        rankingClubAdapter.setRankingClubs(rankingClubs);
     }
 }

@@ -7,7 +7,10 @@ import androidx.databinding.ObservableArrayList;
 
 import com.example.tvleague.view.MainActivity;
 
+import java.sql.Array;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 
 public class DatabaseRoute {
@@ -79,20 +82,26 @@ public class DatabaseRoute {
     }
     public static ArrayList<Player> getPlayersOfClubById(int id_club){
         ArrayList<Player> players = new ArrayList<>();
-        Cursor cursor = MainActivity.database.rawQuery("select  * from CauThu", null);
-        while(cursor.moveToNext()){
-            int idPlayer = cursor.getInt(0);
-            int idClub = cursor.getInt(5);//MaDoiBong
-            String name = cursor.getString(1);
-            int type = cursor.getInt(3);
-            String dob = cursor.getString(2);
-            String note = cursor.getString(4);
+        Cursor cursor = null;
+        try {
+            cursor = MainActivity.database.rawQuery("select  * from CauThu", null);
+            while(cursor.moveToNext()){
+                int idPlayer = cursor.getInt(0);
+                int idClub = cursor.getInt(5);//MaDoiBong
+                String name = cursor.getString(1);
+                int type = cursor.getInt(3);
+                String dob = cursor.getString(2);
+                String note = cursor.getString(4);
 
 
-            if(id_club == idClub){
-                Player player = new Player(idPlayer,name,dob,type,note);
-                players.add(player);
+                if(id_club == idClub){
+                    Player player = new Player(idPlayer,name,dob,type,note);
+                    players.add(player);
+                }
             }
+        }
+        finally {
+            cursor.close();
         }
         if (players.size() == 0 ){
             return null;
@@ -120,32 +129,42 @@ public class DatabaseRoute {
     }
     public static Club getClubById(int id){
         Club club;
-        Cursor cursor = MainActivity.database.
-                rawQuery("select * from DoiBong where MaDoiBong = ?",
-                        new String[] {String.valueOf(id)});
-        while(cursor.moveToNext()){
-            String TenDoi = cursor.getString(1);
-            String SanNha = cursor.getString(2);
-            club = new Club(id,TenDoi,SanNha,id,getPlayersOfClubById(id));
-            return  club;
+        Cursor cursor = null;
+        try{
+            cursor = MainActivity.database.
+                    rawQuery("select * from DoiBong where MaDoiBong = ?",
+                            new String[] {String.valueOf(id)});
+            while(cursor.moveToNext()){
+                String TenDoi = cursor.getString(1);
+                String SanNha = cursor.getString(2);
+                club = new Club(id,TenDoi,SanNha,id,getPlayersOfClubById(id));
+                return  club;
+            }
         }
-        cursor.close();
+        finally {
+            cursor.close();
+        }
         return null;
     }
     public static Player getPlayerById(int id){
         Player player;
-        Cursor cursor = MainActivity.database.
-                rawQuery("select * from CauThu where MaCauThu = ?",
-                        new String[] {String.valueOf(id)});
-        while(cursor.moveToNext()){
-            int idClub = cursor.getInt(5);//MaDoiBong
-            String name = cursor.getString(1);
-            int type = cursor.getInt(3);
-            String dob = cursor.getString(2);
-            String note = cursor.getString(4);
-            return  new Player(id,name,dob,type,note);
+        Cursor cursor = null;
+        try {
+            cursor = MainActivity.database.
+                    rawQuery("select * from CauThu where MaCauThu = ?",
+                            new String[] {String.valueOf(id)});
+            while(cursor.moveToNext()){
+                int idClub = cursor.getInt(5);//MaDoiBong
+                String name = cursor.getString(1);
+                int type = cursor.getInt(3);
+                String dob = cursor.getString(2);
+                String note = cursor.getString(4);
+                return  new Player(id,name,dob,type,note);
+            }
         }
-        cursor.close();
+        finally {
+            cursor.close();
+        }
         return null;
     }
     public static String getScoreByIdSchedule(int id){
@@ -216,26 +235,521 @@ public class DatabaseRoute {
     }
     public static ObservableArrayList<Goal> getListGoal(int id_match, int id_club){
         ObservableArrayList<Goal> goals = new ObservableArrayList<>();
-        Cursor cursor = MainActivity.database
-                .rawQuery("select  * from BanThang " +
-                        "where MaTranDau = " +  id_match + " and MaDoiBong = " + id_club, null);
-        while(cursor.moveToNext()){
-            int MaBanThang = cursor.getInt(0);
-            int MaCauThu = cursor.getInt(2);
-            int MaLoaiBanThang = cursor.getInt(3);
-            int ThoiDiemGhiBan = cursor.getInt(4);
-            Player player = getPlayerById(MaCauThu);
-            Goal goal = new Goal(MaBanThang,player,ThoiDiemGhiBan,MaLoaiBanThang,id_club,id_match);
-            goals.add(goal);
+        Cursor cursor = null;
+        try{
+           cursor = MainActivity.database
+                    .rawQuery("select  * from BanThang " +
+                            "where MaTranDau = " +  id_match + " and MaDoiBong = " + id_club, null);
+            while(cursor.moveToNext()){
+                int MaBanThang = cursor.getInt(0);
+                int MaCauThu = cursor.getInt(2);
+                int MaLoaiBanThang = cursor.getInt(3);
+                int ThoiDiemGhiBan = cursor.getInt(4);
+                Player player = getPlayerById(MaCauThu);
+                Goal goal = new Goal(MaBanThang,player,ThoiDiemGhiBan,MaLoaiBanThang,id_club,id_match);
+                goals.add(goal);
+            }
         }
-        cursor.close();
+        finally {
+            cursor.close();
+        }
         return goals;
     }
     public static void startLeague(){
         ContentValues cv = new ContentValues();
         cv.put("BatDau", 1);
         MainActivity.database.update("BatDauGiaiDau", cv, "BatDau = ?", new String[]{0 + ""});
+        ContentValues contentValues = new ContentValues();
+        Cursor cursor = MainActivity.database.rawQuery("select * from LichThiDau limit 1;",null);
+        String date = "";
+        while(cursor.moveToNext()){
+            date = cursor.getString(4);
+        }
+        String [] arrayString = date.split(" ");
+        cursor.close();
+        contentValues.put("Ngay", arrayString[1]);
+        // Thêm dòng vào bảng BXH ngày diễn ra trận đầu tiên
+        MainActivity.database.insert("BXH", null, contentValues);
+        Cursor cursor1 = MainActivity.database.rawQuery("select * from BXH limit 1;",null);
+        int idRankTable = 0;
+        while(cursor1.moveToNext()){
+            idRankTable = cursor1.getInt(0);
+        }
+        cursor1.close();
+        ArrayList<RankingClub> rankingClubs = new ArrayList<>();
+        ArrayList<Club> listClub = DatabaseRoute.getAllClub();
+        for(int i = 0; i < listClub.size();i++){
+            RankingClub rankingClub = new RankingClub(listClub.get(i),0,0,0,0,0,0);
+            rankingClub.calPoint();
+            rankingClub.calGoalDifference();
+            rankingClubs.add(rankingClub);
+        }
+        Collections.sort(rankingClubs, new RankingClub.SortbyPriority1());
+        // Set rank after sorting
+        for(int i= 0; i< rankingClubs.size();i++){
+            rankingClubs.get(i).setRank(i + 1);
+        }
+        // Bảng xếp hạng trước khi diễn ra trận đấu đầu tiên
+        MainActivity.database.beginTransaction();
+        try
+        {
+            for (int i =0; i < rankingClubs.size();i++){
+                int idRankingTable = idRankTable;
+                int idClub = rankingClubs.get(i).getClub().id;
+                int winCount = rankingClubs.get(i).getWinCount();
+                int drawCount = rankingClubs.get(i).getDrawCount();
+                int loseCount = rankingClubs.get(i).getLoseCount();
+                int goalCount = rankingClubs.get(i).getGoalCount();
+                int goalConcededCount = rankingClubs.get(i).getGoalConcededCount();
+                int rank = rankingClubs.get(i).getRank();
+                int gd = rankingClubs.get(i).getGoalDifference();
+                int played = rankingClubs.get(i).getRound();
+                ContentValues ranking = new ContentValues();
+                ranking.put("MaBXH",idRankingTable);
+                ranking.put("MaDoiBong",idClub);
+                ranking.put("SoTranThang", winCount);
+                ranking.put("SoTranHoa", drawCount);
+                ranking.put("SoTranThua",loseCount);
+                ranking.put("SoBanThang",goalCount);
+                ranking.put("SoBanThua", goalConcededCount);
+                ranking.put("Hang", rank);
+                ranking.put("HieuSo",gd);
+                ranking.put("SoTran", played);
+                MainActivity.database.insert("BXH_DoiBong",null,ranking);
+            }
+            // If successful commit those changes
+            MainActivity.database.setTransactionSuccessful();
+        }
+        finally
+        {
+            MainActivity.database.endTransaction();
+        }
     }
+
+    public static void insertNewRankingTableByIdRankingTable(Schedule schedule, String date){
+//        Collections.sort(rankingClubs, new RankingClub.SortbyPriority1());
+//        // Set rank after sorting
+//        for(int i= 0; i< rankingClubs.size();i++){
+//            rankingClubs.get(i).setRank(i + 1);
+//        }
+        int newIdRankingTable = 0;
+        MainActivity.database.beginTransaction();
+        try
+        {
+            int currentIdRankingTable = 0;
+            Cursor cursor = MainActivity.database.rawQuery("select * from BXH order by MaBXH desc limit 1",null);
+            while (cursor.moveToNext()){
+                currentIdRankingTable = cursor.getInt(0);
+            }
+            Cursor cursor1 = MainActivity.database.rawQuery("select * from BXH where MaBXH = " + currentIdRankingTable,null);
+            String oldDate = "";
+            if (cursor1.moveToNext()){
+                oldDate = cursor1.getString(1);
+            }
+            ArrayList<RankingClub> rankingClubs = getRankingByDate(oldDate);
+            newIdRankingTable = currentIdRankingTable + 1;
+            ContentValues cv = new ContentValues();
+            cv.put("MaBXH", newIdRankingTable);
+            cv.put("Ngay", date);
+            MainActivity.database.insert("BXH",null, cv);
+            for (int i =0; i < rankingClubs.size();i++){
+                int idClub = rankingClubs.get(i).getClub().id;
+                int winCount = rankingClubs.get(i).getWinCount();
+                int drawCount = rankingClubs.get(i).getDrawCount();
+                int loseCount = rankingClubs.get(i).getLoseCount();
+                int goalCount = rankingClubs.get(i).getGoalCount();
+                int goalConcededCount = rankingClubs.get(i).getGoalConcededCount();
+                int rank = rankingClubs.get(i).getRank();
+                int gd = rankingClubs.get(i).getGoalDifference();
+                int played = rankingClubs.get(i).getRound();
+                ContentValues ranking = new ContentValues();
+                ranking.put("MaBXH",newIdRankingTable);
+                ranking.put("MaDoiBong",idClub);
+                ranking.put("SoTranThang", winCount);
+                ranking.put("SoTranHoa", drawCount);
+                ranking.put("SoTranThua",loseCount);
+                ranking.put("SoBanThang",goalCount);
+                ranking.put("SoBanThua", goalConcededCount);
+                ranking.put("Hang", rank);
+                ranking.put("HieuSo",gd);
+                ranking.put("SoTran", played);
+                MainActivity.database.insert("BXH_DoiBong",null,ranking);
+            }
+            // If successful commit those changes
+            MainActivity.database.setTransactionSuccessful();
+        }
+        finally
+        {
+            MainActivity.database.endTransaction();
+        }
+        updateRankingClubAfterMatchResult(schedule,schedule.getClub1().getId(),newIdRankingTable,0);
+        updateRankingClubAfterMatchResult(schedule,schedule.getClub2().getId(),newIdRankingTable,0);
+        sortRankingClubAfterMatchResult(date);
+    }
+
+    public static void updateRankingTableByIdRankingTable(int idRankingTable, ArrayList<RankingClub> rankingClubs){
+        MainActivity.database.beginTransaction();
+        try
+        {
+            for (int i =0; i < rankingClubs.size();i++){
+                int idClub = rankingClubs.get(i).getClub().id;
+                int winCount = rankingClubs.get(i).getWinCount();
+                int drawCount = rankingClubs.get(i).getDrawCount();
+                int loseCount = rankingClubs.get(i).getLoseCount();
+                int goalCount = rankingClubs.get(i).getGoalCount();
+                int goalConcededCount = rankingClubs.get(i).getGoalConcededCount();
+                int rank = rankingClubs.get(i).getRank();
+                int gd = rankingClubs.get(i).getGoalDifference();
+                int played = rankingClubs.get(i).getRound();
+                ContentValues ranking = new ContentValues();
+                ranking.put("MaBXH",idRankingTable);
+                System.out.println(idRankingTable);
+                ranking.put("MaDoiBong",idClub);
+                ranking.put("SoTranThang", winCount);
+                ranking.put("SoTranHoa", drawCount);
+                ranking.put("SoTranThua",loseCount);
+                ranking.put("SoBanThang",goalCount);
+                ranking.put("SoBanThua", goalConcededCount);
+                ranking.put("Hang", rank);
+                ranking.put("HieuSo",gd);
+                ranking.put("SoTran", played);
+                MainActivity.database.update("BXH_DoiBong",ranking,"MaBXH = ? and MaDoiBong = ?", new String[]{idRankingTable+ "",idClub + ""});
+            }
+            // If successful commit those changes
+            MainActivity.database.setTransactionSuccessful();
+        }
+        finally
+        {
+            MainActivity.database.endTransaction();
+        }
+    }
+
+    public static RankingClub getRankingClubByIdRankingTable(int idClub, int idTable){
+        Cursor cursor = MainActivity.database.rawQuery("select * from BXH_DoiBong where MaBXH = " + idTable + " and MaDoiBong = " + idClub,null);
+        RankingClub rankingClub = null;
+        while (cursor.moveToNext()){
+            Club club = getClubById(idClub);
+            int winCount = cursor.getInt(2);
+            int drawCount = cursor.getInt(3);
+            int loseCount = cursor.getInt(4);
+            int goalCount = cursor.getInt(5);
+            int goalConcededCount = cursor.getInt(6);
+            int rank = cursor.getInt(7);
+            int gd = cursor.getInt(8);
+            int played = cursor.getInt(9);
+            rankingClub = new RankingClub(club,winCount,drawCount,loseCount,goalCount,goalConcededCount,played);
+            rankingClub.setRank(rank);
+            rankingClub.setGoalDifference(gd);
+        }
+        return rankingClub;
+    }
+
+    public static int deleteClubRankInRankingTableByIdTable(int idClub, int idTable){
+        int res = MainActivity.database.delete("BXH_DoiBong","MaBXH = ? and MaDoiBong = ? ",new String[]{idTable + "", idClub + ""});
+        return res;
+    }
+
+    public static void insertClubRankInRankingTableByIdTable(RankingClub rankingClub,int idTable){
+        ContentValues cv = new ContentValues();
+        cv.put("MaBXH", idTable);
+        cv.put("MaDoi", rankingClub.getClub().getId());
+        cv.put("SoTranThang", rankingClub.getWinCount());
+        cv.put("SoTranHoa", rankingClub.getDrawCount());
+        cv.put("SoTranThua", rankingClub.getLoseCount());
+        cv.put("SoBanThang", rankingClub.getGoalCount());
+        cv.put("SoBanThua", rankingClub.getGoalConcededCount());
+        cv.put("HieuSo", rankingClub.getGoalDifference());
+        cv.put("Rank", rankingClub.getRank());
+        cv.put("SoTran", rankingClub.getRound());
+        MainActivity.database.insert("BXH_DoiBong", null,cv);
+    }
+    // Cập nhật lại thông số trên bảng xếp hạng của CLB: mode = 1 cập nhật lại kết quả cũ, mode = 0 cập nhật kết quả mới
+    public static void updateRankingClubAfterMatchResult(Schedule schedule, int idClub, int idTable, int mode){
+        // Xếp hạng cũ
+        RankingClub oldRankingClub = getRankingClubByIdRankingTable(idClub,idTable);
+        RankingClub rankingClub= null;
+        if(mode == 0){
+           rankingClub = getRankingClubByIdRankingTable(idClub,idTable);
+        }
+        else{
+            if(idTable == 1){
+                Club club = getClubById(idClub);
+                rankingClub = new RankingClub(club,0,0,0,0,0,0);
+            }
+            else{
+                rankingClub = getRankingClubByIdRankingTable(idClub,idTable - 1);
+            }
+        }
+        int club1Score = schedule.getMatch().getListGoalClub1().size();
+        int club2Score = schedule.getMatch().getListGoalClub2().size();
+        // Xếp hạng mới
+        if(mode == 0){ // Cập nhật sau kết quả trận đấu mới
+            if(idClub == schedule.getClub1().getId()){ // Nếu là club1
+                if(club1Score > club2Score){ // Club 1 chiến thắng
+                    rankingClub.setWinCount(rankingClub.getWinCount() + 1); // +1 trận thắng
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                else if( club1Score == club2Score){ // Club1 hoà Club2
+                    rankingClub.setDrawCount(rankingClub.getDrawCount() + 1); // +1 trận hoà
+                }
+                else{ // Club1 thua
+                    rankingClub.setLoseCount(rankingClub.getLoseCount() + 1); // +1 trận thua
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                rankingClub.setGoalCount(rankingClub.getGoalCount() + club1Score); // Cập nhật số bàn thắng
+                rankingClub.setGoalConcededCount(rankingClub.getGoalConcededCount() + club2Score); // Cập nhật số bàn thua
+                rankingClub.setRound(rankingClub.getRound() + 1); // Cập nhật số trận đã chơi
+            }
+            else{ // Nếu là club2
+                if(club2Score > club1Score){ // Club 2 chiến thắng
+                    rankingClub.setWinCount(rankingClub.getWinCount() + 1); // +1 trận thắng
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                else if( club1Score == club2Score){ // Club1 hoà Club2
+                    rankingClub.setDrawCount(rankingClub.getDrawCount() + 1); // +1 trận hoà
+                }
+                else{ // Club2 thua
+                    rankingClub.setLoseCount(rankingClub.getLoseCount() + 1); // +1 trận thua
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                rankingClub.setGoalCount(rankingClub.getGoalCount() + club2Score); // Cập nhật số bàn thắng
+                rankingClub.setGoalConcededCount(rankingClub.getGoalConcededCount() + club1Score); // Cập nhật số bàn thua
+                rankingClub.setRound(rankingClub.getRound() + 1); // Cập nhật số trận đã chơi
+            }
+        }
+        else{ // Cập nhật sau kết quả trận đấu cũ
+            System.out.println(deleteClubRankInRankingTableByIdTable(idClub,idTable) + " Xoa");
+            if(idClub == schedule.getClub1().getId()){ // Nếu là club1
+                if(club1Score > club2Score){ // Club 1 chiến thắng
+                    rankingClub.setWinCount(rankingClub.getWinCount() + 1); // +1 trận thắng
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                else if( club1Score == club2Score){ // Club1 hoà Club2
+                    rankingClub.setDrawCount(rankingClub.getDrawCount() + 1); // +1 trận hoà
+                }
+                else{ // Club1 thua
+                    rankingClub.setLoseCount(rankingClub.getLoseCount() + 1); // +1 trận thua
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                rankingClub.setGoalCount(rankingClub.getGoalCount() + club1Score); // Cập nhật số bàn thắng
+                rankingClub.setGoalConcededCount(rankingClub.getGoalConcededCount() + club2Score); // Cập nhật số bàn thua
+                rankingClub.setRound(rankingClub.getRound() + 1); // Cập nhật số trận đã chơi
+            }
+            else{ // Nếu là club2
+                if(club2Score > club1Score){ // Club 2 chiến thắng
+                    rankingClub.setWinCount(rankingClub.getWinCount() + 1); // +1 trận thắng
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                else if( club1Score == club2Score){ // Club1 hoà Club2
+                    rankingClub.setDrawCount(rankingClub.getDrawCount() + 1); // +1 trận hoà
+                }
+                else{ // Club2 thua
+                    rankingClub.setLoseCount(rankingClub.getLoseCount() + 1); // +1 trận thua
+                    rankingClub.setGoalDifference(rankingClub.getDrawCount() + (club1Score - club2Score)); // Cập nhật hiệu số
+                }
+                rankingClub.setGoalCount(rankingClub.getGoalCount() + club2Score); // Cập nhật số bàn thắng
+                rankingClub.setGoalConcededCount(rankingClub.getGoalConcededCount() + club1Score); // Cập nhật số bàn thua
+                rankingClub.setRound(rankingClub.getRound() + 1); // Cập nhật số trận đã chơi
+            }
+        }
+        ContentValues cv = new ContentValues();
+        cv.put("MaBXH", idTable);
+        cv.put("MaDoiBong", idClub);
+        cv.put("SoTranThang", rankingClub.getWinCount());
+        cv.put("SoTranHoa", rankingClub.getDrawCount());
+        cv.put("SoTranThua", rankingClub.getLoseCount());
+        cv.put("SoBanThang", rankingClub.getGoalCount());
+        cv.put("SoBanThua", rankingClub.getGoalConcededCount());
+        cv.put("Hang", rankingClub.getRank());
+        cv.put("HieuSo", rankingClub.getGoalDifference());
+        cv.put("SoTran", rankingClub.getRound());
+        Cursor cursor = MainActivity.database.rawQuery("select * from BXH order by MaBXH desc limit 1",null);
+        int latestRankingTabbleId = 0;
+        if (cursor.moveToNext()){
+            latestRankingTabbleId = cursor.getInt(0);
+        }
+        if(mode == 0){
+            MainActivity.database.update("BXH_DoiBong", cv,"MaBXH = ? and MaDoiBong = ?", new String[]{idTable + "", idClub + ""});
+        }
+        else{
+            int isWin = rankingClub.getWinCount() - oldRankingClub.getWinCount();
+            int isLose = rankingClub.getLoseCount() - oldRankingClub.getLoseCount();
+            int isDraw = rankingClub.getDrawCount() - oldRankingClub.getDrawCount();
+            MainActivity.database.insert("BXH_DoiBong",null, cv);
+            if(isWin > 0){ // Nếu sửa trận đấu cũ thành 1 trận thắng
+//                ContentValues cv1 = new ContentValues();
+//                cv1.put("SoTranThang", "SoTranThang + 1");
+//                MainActivity.database.update("BXH_DoiBong",cv,"MaDoiBong = ? and MaBXH > ? and MaBXH <= ?",new String[]{idClub + "", idTable + "", latestRankingTabbleId + ""});
+                String strSQL = "update BXH_DoiBong set SoTranThang = SoTranThang + 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+                MainActivity.database.execSQL(strSQL);
+            }
+            else if( isWin < 0){
+                String strSQL = "update BXH_DoiBong set SoTranThang = SoTranThang - 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+                MainActivity.database.execSQL(strSQL);
+            }
+            if(isDraw > 0){ // Nếu sửa trận đấu cũ thành 1 trận thắng
+//                ContentValues cv1 = new ContentValues();
+//                cv1.put("SoTranHoa", "SoTranHoa + 1");
+//                MainActivity.database.update("BXH_DoiBong",cv,"MaDoiBong = ? and MaBXH > ? and MaBXH <= ?",new String[]{idClub + "", idTable + "", latestRankingTabbleId + ""});
+                String strSQL = "update BXH_DoiBong set SoTranHoa = SoTranHoa + 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+                MainActivity.database.execSQL(strSQL);
+            }
+            else if( isDraw < 0){
+                String strSQL = "update BXH_DoiBong set SoTranHoa = SoTranHoa - 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+                MainActivity.database.execSQL(strSQL);
+            }
+            if(isLose > 0){ // Nếu sửa trận đấu cũ thành 1 trận thắng
+//                ContentValues cv1 = new ContentValues();
+//                cv1.put("SoTranThua", "SoTranThua + 1");
+//                MainActivity.database.update("BXH_DoiBong",cv,"MaDoiBong = ? and MaBXH > ? and MaBXH <= ?",new String[]{idClub + "", idTable + "", latestRankingTabbleId + ""});
+                String strSQL = "update BXH_DoiBong set SoTranThua = SoTranThua + 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+                MainActivity.database.execSQL(strSQL);
+            }
+            else if( isLose < 0){
+                String strSQL = "update BXH_DoiBong set SoTranThua = SoTranThua - 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+                MainActivity.database.execSQL(strSQL);
+            }
+        }
+    }
+
+    public static void sortRankingClubAfterMatchResult(String date){
+        int idRankingTable = 0;
+        Cursor cursor = MainActivity.database.rawQuery("select * from BXH where Ngay = \"" + date + "\";" , null);
+        while (cursor.moveToNext()){
+            idRankingTable = cursor.getInt(0);
+        }
+        cursor.close();
+        ArrayList<RankingClub> rankingClubs = getRankingByDate(date);
+        for(RankingClub rankingClub : rankingClubs){
+            rankingClub.calPoint();
+            rankingClub.calGoalDifference();
+        }
+        Collections.sort(rankingClubs, new RankingClub.SortbyPriority1());
+        // Set rank after sorting
+        for(int i= 0; i< rankingClubs.size();i++){
+            rankingClubs.get(i).setRank(i + 1);
+        }
+        for(RankingClub rankingClub : rankingClubs){
+            System.out.println(rankingClub.getClub().getName() + " " + rankingClub.getPoints());
+        }
+        updateRankingTableByIdRankingTable(idRankingTable,rankingClubs);
+    }
+
+    public static void sortAllRankingTableAfterEditOldMatch(String oldDate){
+        Cursor cursor = MainActivity.database.rawQuery("select * from BXH where Ngay = \""+ oldDate + "\"",null);
+        int oldRankingTableId = 0;
+        if(cursor.moveToNext()){
+            oldRankingTableId = cursor.getInt(0);
+        }
+        cursor.close();
+        int newRankingTableId = 0;
+        cursor = MainActivity.database.rawQuery("select * from BXH order by MaBXH desc limit 1", null);
+        if(cursor.moveToNext());
+        {
+            newRankingTableId = cursor.getInt(0);
+        }
+        cursor.close();
+        for (int i = oldRankingTableId; i <= newRankingTableId;i++){
+            cursor = MainActivity.database.rawQuery("select * from BXH where MaBXH = " + i, null);
+            String date = "";
+            if(cursor.moveToNext());
+            {
+                date = cursor.getString(1);
+            }
+            cursor.close();
+            sortRankingClubAfterMatchResult(date);
+        }
+    }
+
+    public static void updateRankingTableAfterMatchResult(Schedule schedule) {
+        String date = schedule.getDateTime();
+        String [] arrayString = date.split(" ");
+        date = arrayString[1];
+        Cursor cursor = MainActivity.database.rawQuery("select * from BXH where Ngay = \"" + date + "\";" , null);
+
+        if(cursor.moveToNext()){
+            System.out.println(" BXH Cu");
+            System.out.println(cursor.getString(1));
+            int idRankingTable = cursor.getInt(0);
+            int idClub1 = schedule.getClub1().getId();
+            int idClub2 = schedule.getClub2().getId();
+            if(schedule.getMatch().getScore() == null){ // Cập nhật tỉ số khi trận đấu chưa diễn ra
+                // Cập nhật thông số Club1
+                updateRankingClubAfterMatchResult(schedule,idClub1,idRankingTable,0);
+                // Cập nhật thông số Club2
+                updateRankingClubAfterMatchResult(schedule,idClub2,idRankingTable,0);
+                // Sắp xếp lại bảng xếp hạng
+            }
+            else{ // Cập nhật tỉ số khi trận đấu đã diễn ra
+                // Cập nhật thông số Club1
+                updateRankingClubAfterMatchResult(schedule,idClub1,idRankingTable,1);
+                // Cập nhật thông số Club2
+                updateRankingClubAfterMatchResult(schedule,idClub2,idRankingTable,1);
+                // Sắp xếp lại bảng xếp hạng
+            }
+            sortAllRankingTableAfterEditOldMatch(date);
+        }
+        else{
+            // TO DO
+            System.out.println(" BXH Moi");
+            insertNewRankingTableByIdRankingTable(schedule,date);
+        }
+    }
+
+    public static ArrayList<String> getAllRankReportDate(){
+        ArrayList<String> dates = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = MainActivity.database.rawQuery("select * from BXH;", null);
+            while (cursor.moveToNext()){
+                dates.add(cursor.getString(1));
+            }
+        }
+        finally {
+            cursor.close();
+        }
+        return dates;
+    }
+
+    public static ArrayList<RankingClub> getRankingByDate(String date){
+        Cursor cursor1 = null;
+        int id = -1;
+        try{
+            cursor1 = MainActivity.database.rawQuery("select * from BXH where Ngay = \"" + date + "\";",null);
+            while (cursor1.moveToNext()){
+                id = cursor1.getInt(0);
+            }
+        }
+        finally {
+            cursor1.close();
+        }
+        Cursor cursor2 = null;
+        ArrayList<RankingClub> rankingClubsByDate = new ArrayList<>();
+        try {
+            cursor2 = MainActivity.database.rawQuery("select * from BXH_DoiBong where MaBXH = " + id + " order by Hang asc;"  ,null);
+            while (cursor2.moveToNext()){
+                int idClub = cursor2.getInt(1);
+                Club club = getClubById(idClub);
+                int winCount = cursor2.getInt(2);
+                int drawCount = cursor2.getInt(3);
+                int loseCount = cursor2.getInt(4);
+                int goalCount = cursor2.getInt(5);
+                int goalConcededCount = cursor2.getInt(6);
+                int rank = cursor2.getInt(7);
+                int gd = cursor2.getInt(8);
+                int played = cursor2.getInt(9);
+                RankingClub rankingClub = new RankingClub(club,winCount,drawCount,loseCount,goalCount,goalConcededCount,played);
+                rankingClub.setRank(rank);
+                rankingClub.setGoalDifference(gd);
+                rankingClubsByDate.add(rankingClub);
+            }
+        }
+        finally {
+            cursor2.close();
+        }
+        return rankingClubsByDate;
+    }
+
     public static boolean IsStartLeague(){
         Cursor cursor = MainActivity.database.
                 rawQuery("select * from BatDauGiaiDau where BatDau = ?",
@@ -248,31 +762,41 @@ public class DatabaseRoute {
     }
     public static ObservableArrayList<Integer> get2IdClubByIdSchedule(int id){
         ObservableArrayList<Integer> clubs = new ObservableArrayList<>();
-        Cursor cursor = MainActivity.database.
-                rawQuery("select * from LichThiDau where MaLichThiDau = ?",
-                        new String[] {String.valueOf(id)});
-        while(cursor.moveToNext()){
-            clubs.add(cursor.getInt(2));
-            clubs.add(cursor.getInt(3));
-            return clubs;
+        Cursor cursor = null;
+        try{
+            cursor = MainActivity.database.
+                    rawQuery("select * from LichThiDau where MaLichThiDau = ?",
+                            new String[] {String.valueOf(id)});
+            while(cursor.moveToNext()){
+                clubs.add(cursor.getInt(2));
+                clubs.add(cursor.getInt(3));
+                return clubs;
+            }
         }
-        cursor.close();
+        finally {
+            cursor.close();
+        }
         return null;
     }
     public static Match getMatchById(int id){
-        Cursor cursor = MainActivity.database.
-                rawQuery("select * from TranDau where MaTranDau = ?",
-                        new String[] {String.valueOf(id)});
-        while(cursor.moveToNext()){
-            String score = cursor.getString(1);
-            int MaLichThiDau = cursor.getInt(2);
-            ObservableArrayList<Integer> clubs = get2IdClubByIdSchedule(MaLichThiDau);
-            ObservableArrayList<Goal> listGoalHome = getListGoal(id,clubs.get(0));
-            ObservableArrayList<Goal> listGoalAway = getListGoal(id,clubs.get(1));
-            Match match = new Match(id,score,listGoalHome,listGoalAway);
-            return match;
+        Cursor cursor= null;
+        try{
+            cursor = MainActivity.database.
+                    rawQuery("select * from TranDau where MaTranDau = ?",
+                            new String[] {String.valueOf(id)});
+            while(cursor.moveToNext()){
+                String score = cursor.getString(1);
+                int MaLichThiDau = cursor.getInt(2);
+                ObservableArrayList<Integer> clubs = get2IdClubByIdSchedule(MaLichThiDau);
+                ObservableArrayList<Goal> listGoalHome = getListGoal(id,clubs.get(0));
+                ObservableArrayList<Goal> listGoalAway = getListGoal(id,clubs.get(1));
+                Match match = new Match(id,score,listGoalHome,listGoalAway);
+                return match;
+            }
         }
-        cursor.close();
+        finally {
+            cursor.close();
+        }
         return null;
     }
     public static ArrayList<Schedule> getMatchByRound(int round){
@@ -344,5 +868,25 @@ public class DatabaseRoute {
         int res = MainActivity.database.delete("BanThang","MaBanThang=?",new String[]{id+""});
 
         System.out.println("res: "  + res);
+    }
+
+    public static Player findPlayerById(int id){
+        Cursor cursor = MainActivity.database.query("CauThu",null,null,null,null,null,null,null);
+        while (cursor.moveToNext()){
+            if(id == cursor.getInt(0)){
+                return new Player(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getString(4));
+            }
+        }
+        return null;
+    }
+
+    public static Player findPlayerByName(String name){
+        Cursor cursor = MainActivity.database.query("CauThu",null,null,null,null,null,null,null);
+        while (cursor.moveToNext()){
+            if(name.equals(cursor.getString(1))){
+                return new Player(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getString(4));
+            }
+        }
+        return null;
     }
 }

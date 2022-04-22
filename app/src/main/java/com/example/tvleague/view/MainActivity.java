@@ -2,6 +2,7 @@ package com.example.tvleague.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -43,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
             binding.btnCreateCalendar.setEnabled(false);
             binding.btnAddClub.setEnabled(false);
             binding.btnListAddedClub.setEnabled(false);
+            binding.btnLeagueManagement.setEnabled(true);
+        }
+        else{
+            binding.btnLeagueManagement.setEnabled(false);
         }
         binding.btnAddClub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,60 +73,82 @@ public class MainActivity extends AppCompatActivity {
         binding.btnCreateCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<Schedule> listSchedules = new ArrayList<>();
-                ArrayList<String> round = new ArrayList<>();
-                ArrayList<String> first_leg = new ArrayList<>();
-                ArrayList<String> second_leg = new ArrayList<>();
+                ProgressDialog mProgressDialog  = ProgressDialog.show(MainActivity.this, "Loading","Đang lập lịch giải đấu ...", true);
+                new Thread() {
+                    @Override
+                    public void run() {
 
-                ArrayList<Club> clubs = DatabaseRoute.getAllClub();
-                int sizeOfClub = clubs.size();
-                int arrSchedule [][]= getArraySchedule(clubs);
-                for (int i = 0; i<sizeOfClub - 1; i++){
-                    LocalDate now = LocalDate.now();
-                    String dt = now.toString();
-                    String dt_second_leg = now.toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    Calendar c = Calendar.getInstance();
-                    c.add(Calendar.DATE, (i+1)*7);  // number of days to add
-                    dt = sdf.format(c.getTime());  // dt is now the new date
-                    System.out.println("Vong: " + (i+1));
-                    for (int j = 0;j<sizeOfClub/2 ;j++){
-                        int MaDoiNha = j ;
-                        int MaDoiKhach = sizeOfClub - j - 1;
-                        String date;
-                        String date_2;//luot ve
+                        ArrayList<Schedule> listSchedules = new ArrayList<>();
+                        ArrayList<String> round = new ArrayList<>();
+                        ArrayList<String> first_leg = new ArrayList<>();
+                        ArrayList<String> second_leg = new ArrayList<>();
 
-                        Calendar d = Calendar.getInstance();
-                        d.add(Calendar.DATE, (i+1 + sizeOfClub)*7);  // number of days to add
-                        dt_second_leg = sdf.format(d.getTime());
-                        if(j < sizeOfClub/4){
-                            c.add(Calendar.DATE, 1);  // number of days to add
+                        ArrayList<Club> clubs = DatabaseRoute.getAllClub();
+                        int sizeOfClub = clubs.size();
+                        int arrSchedule [][]= getArraySchedule(clubs);
+                        for (int i = 0; i<sizeOfClub - 1; i++){
+                            LocalDate now = LocalDate.now();
+                            String dt = now.toString();
+                            String dt_second_leg = now.toString();
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                            Calendar c = Calendar.getInstance();
+                            c.add(Calendar.DATE, (i+1)*7);  // number of days to add
                             dt = sdf.format(c.getTime());  // dt is now the new date
-                            d.add(Calendar.DATE, 1);  // number of days to add
-                            dt_second_leg = sdf.format(d.getTime());
-                        }
+                            System.out.println("Vong: " + (i+1));
+                            for (int j = 0;j<sizeOfClub/2 ;j++){
+                                int MaDoiNha = j ;
+                                int MaDoiKhach = sizeOfClub - j - 1;
+                                String date;
+                                String date_2;//luot ve
+
+                                Calendar d = Calendar.getInstance();
+                                d.add(Calendar.DATE, (i+1 + sizeOfClub)*7);  // number of days to add
+                                dt_second_leg = sdf.format(d.getTime());
+                                if(j < sizeOfClub/4){
+                                    c.add(Calendar.DATE, 1);  // number of days to add
+                                    dt = sdf.format(c.getTime());  // dt is now the new date
+                                    d.add(Calendar.DATE, 1);  // number of days to add
+                                    dt_second_leg = sdf.format(d.getTime());
+                                }
 
 
 
-                        if(j % 2 == 0){
-                         date = "17:00 " + dt;
-                         date_2 = "17:00 " + dt_second_leg;
+                                if(j % 2 == 0){
+                                    date = "17:00 " + dt;
+                                    date_2 = "17:00 " + dt_second_leg;
+                                }
+                                else {
+                                    date = "19:00 " + dt;
+                                    date_2 = "19:00 " + dt_second_leg;
+                                }
+                                DatabaseRoute.addToSchedule(i+1,arrSchedule[i][MaDoiNha],arrSchedule[i][MaDoiKhach],date);
+                                int id_schedule_first = DatabaseRoute.getIdScheduleByTwoIdClub(arrSchedule[i][MaDoiNha],arrSchedule[i][MaDoiKhach]);
+                                DatabaseRoute.addToMatch(id_schedule_first,null);
+                                DatabaseRoute.addToSchedule(i+sizeOfClub,arrSchedule[i][MaDoiKhach],arrSchedule[i][MaDoiNha],date_2);
+                                int id_schedule_second = DatabaseRoute.getIdScheduleByTwoIdClub(arrSchedule[i][MaDoiKhach],arrSchedule[i][MaDoiNha]);
+                                DatabaseRoute.addToMatch(id_schedule_second,null);
+                            }
                         }
-                        else {
-                            date = "19:00 " + dt;
-                            date_2 = "19:00 " + dt_second_leg;
+                        try {
+
+                            // code runs in a thread
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressDialog.dismiss();
+                                    DatabaseRoute.startLeague();//bat dau giai
+                                    binding.btnCreateCalendar.setEnabled(false);
+                                    binding.btnAddClub.setEnabled(false);
+                                    binding.btnListAddedClub.setEnabled(false);
+                                    binding.btnLeagueManagement.setEnabled(true);
+                                    Toast.makeText(MainActivity.this, "Giải đấu đã bắt đầu!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } catch (final Exception ex) {
+
                         }
-                        DatabaseRoute.addToSchedule(i+1,arrSchedule[i][MaDoiNha],arrSchedule[i][MaDoiKhach],date);
-                        int id_schedule_first = DatabaseRoute.getIdScheduleByTwoIdClub(arrSchedule[i][MaDoiNha],arrSchedule[i][MaDoiKhach]);
-                        DatabaseRoute.addToMatch(id_schedule_first,null);
-                        DatabaseRoute.addToSchedule(i+sizeOfClub,arrSchedule[i][MaDoiKhach],arrSchedule[i][MaDoiNha],date_2);
-                        int id_schedule_second = DatabaseRoute.getIdScheduleByTwoIdClub(arrSchedule[i][MaDoiKhach],arrSchedule[i][MaDoiNha]);
-                        DatabaseRoute.addToMatch(id_schedule_second,null);
                     }
-                }
-                DatabaseRoute.startLeague();//bat dau giai
-                binding.btnCreateCalendar.setEnabled(false);
-                Toast.makeText(MainActivity.this, "Giải đấu đã bắt đầu!", Toast.LENGTH_SHORT).show();
+                }.start();
             }
         });
     }

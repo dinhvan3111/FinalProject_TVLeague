@@ -27,6 +27,7 @@ import com.example.tvleague.databinding.LayoutAddGoalBinding;
 import com.example.tvleague.model.DatabaseRoute;
 import com.example.tvleague.model.Goal;
 import com.example.tvleague.model.GoalAdapter;
+import com.example.tvleague.model.GoalRecyclerViewClickListener;
 import com.example.tvleague.model.Match;
 import com.example.tvleague.model.Player;
 import com.example.tvleague.model.Schedule;
@@ -35,7 +36,7 @@ import java.io.Console;
 import java.util.ArrayList;
 import java.util.Observable;
 
-public class MatchDetail extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+public class MatchDetail extends AppCompatActivity implements NumberPicker.OnValueChangeListener, GoalRecyclerViewClickListener {
     public static ActivityMatchDetailBinding binding;
     public static GoalAdapter club1GoalAdapter;
     public static GoalAdapter club2GoalAdapter;
@@ -134,9 +135,11 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         Goal goal;
                         if(type_goal!=2){//không phản lưới nhà
                             goal = new Goal(-1,player,timeScore,type_goal,id_club,id_match);
+                            addGoalToListGoal(schedule,goal);
                         }
                         else{//phản lưới nhà
                             goal = new Goal(-1,player,timeScore,type_goal,id_club_other,id_match);
+                            addGoalToListGoal(schedule,goal);
                         }
                         DatabaseRoute.addToGoal(goal);
                         int id_club1 = DatabaseRoute.getIdClubByName(NameTwoClub.get(0));
@@ -146,11 +149,12 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         String score = goal1.size() + " - " + goal2.size();
                         int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(id_club1,id_club2);
                         DatabaseRoute.updateScore(id_schedule,score);
+                        DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
                         binding.tvScore.setText(score);
 
                         club2GoalAdapter.setGoalList(goal2);
                         club1GoalAdapter.setGoalList( goal1);
-
+                        dialog.cancel();
                     }
                 });
                 // Chon phút ghi bàn
@@ -183,10 +187,21 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
             case R.id.mnu_no_goal:
                 int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(schedule.getClub1().getId(),schedule.getClub2().getId());
                 DatabaseRoute.updateScore(id_schedule,"0-0");
+                DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
                 binding.tvScore.setText("0-0");
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void addGoalToListGoal(Schedule schedule, Goal goal){
+        // Ban thang thuong
+        if(goal.getMaDoiBong() == schedule.getClub1().getId()){
+            schedule.getMatch().getListGoalClub1().add(goal);
+        }
+        else{
+            schedule.getMatch().getListGoalClub2().add(goal);
+        }
     }
 
     // Hàm show dialog TimePicker
@@ -239,8 +254,8 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         binding.rvListGoalClub1.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
         binding.rvListGoalClub2.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
 
-        club1GoalAdapter = new GoalAdapter(matchResult.getListGoalClub1(),getApplicationContext());
-        club2GoalAdapter = new GoalAdapter(matchResult.getListGoalClub2(),getApplicationContext());
+        club1GoalAdapter = new GoalAdapter(matchResult.getListGoalClub1(),getApplicationContext(),this);
+        club2GoalAdapter = new GoalAdapter(matchResult.getListGoalClub2(),getApplicationContext(),this);
         // Nếu trận đấu chưa diên ra
         if(matchResult.getScore() == null){
             binding.tvScore.setText("? - ?");
@@ -271,5 +286,12 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     protected void onResume() {
         super.onResume();
         System.out.println("Nhan resume o matchdetail");
+    }
+
+    @Override
+    public void goalRecyclerViewListClicked(boolean isDeleted) {
+        if(isDeleted){
+            DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
+        }
     }
 }

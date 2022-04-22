@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemClub"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground">
+        <TextView
+            android:id="@+id/tvClubRank"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Hạng"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
+            android:id="@+id/tvClubName"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tên Đội Bóng"
+            android:textColor="@color/black"
+            android:layout_weight="3"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
+            android:id="@+id/tvWinCount"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Thắng"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
+            android:id="@+id/tvDrawCount"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Hoà"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
+            android:id="@+id/tvLoseCount"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Thua"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
+            android:id="@+id/tvGoalDifference"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Hiệu số"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+    </LinearLayout>
+</layout>

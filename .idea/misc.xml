@@ -17,12 +17,13 @@
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/ic_baseline_list_24.xml" value="0.129" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/ic_baseline_timer_24.xml" value="0.129" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/ic_launcher_background.xml" value="0.129" />
+        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/radius_border.xml" value="0.136" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/row_club_border.xml" value="0.129" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/row_player_info_border.xml" value="0.1" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/row_schedule_background.xml" value="0.129" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/drawable/scrollviewborder.xml" value="0.129" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/activity_add_club_form.xml" value="0.25416666666666665" />
-        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/activity_club_registed.xml" value="0.1" />
+        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/activity_club_registed.xml" value="0.264" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/activity_league_management.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/activity_match_detail.xml" value="0.264" />
@@ -32,6 +33,7 @@
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/fragment_ranking.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/fragment_schedule.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/item_added_goal_row.xml" value="0.25416666666666665" />
+        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/item_club_ranking_row.xml" value="0.20925925925925926" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/item_club_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/item_goal_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/item_list_club_row.xml" value="0.25416666666666665" />
@@ -39,9 +41,12 @@
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/item_schedule_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/layout_add_goal.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/layout_input_player_info.xml" value="0.25416666666666665" />
+        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/layout_search_player.xml" value="0.20925925925925926" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/layout_update_match.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/layout_update_match_info.xml" value="0.25416666666666665" />
+        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/layout/timer_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/menu/menu_search.xml" value="0.20925925925925926" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/menu/update_match_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_add_club_form.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_club_registed.xml" value="0.28732394366197184" />
