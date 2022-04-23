@@ -9,8 +9,12 @@ import com.example.tvleague.view.MainActivity;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Observable;
 
 public class DatabaseRoute {
@@ -118,6 +122,16 @@ public class DatabaseRoute {
         cursor.close();
         return -1;
     }
+    public static int getIdScheduleByIdMatch(int id){
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from TranDau where MaTranDau = ?",
+                        new String[] {String.valueOf(id)});
+        while(cursor.moveToNext()){
+            return cursor.getInt(2);
+        }
+        cursor.close();
+        return -1;
+    }
     public static void updatePlayer(Player player){
         ContentValues cv = new ContentValues();
         cv.put("TenCauThu",player.getName());
@@ -146,6 +160,7 @@ public class DatabaseRoute {
         }
         return null;
     }
+
     public static Player getPlayerById(int id){
         Player player;
         Cursor cursor = null;
@@ -164,6 +179,15 @@ public class DatabaseRoute {
         }
         finally {
             cursor.close();
+        }
+        return null;
+    }
+    public static String getNameClubByIdPlayer(int id){
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from CauThu where MaCauThu = ?",
+                        new String[] {String.valueOf(id)});
+        while(cursor.moveToNext()) {
+            return getClubById(cursor.getInt(5)).getName();
         }
         return null;
     }
@@ -889,4 +913,57 @@ public class DatabaseRoute {
         }
         return null;
     }
+    public static String getTypeById(int id){
+        Cursor cursor = MainActivity.database.query("LoaiCauThu",null,null,null,null,null,null,null);
+        while (cursor.moveToNext()){
+            if(id == cursor.getInt(0)){
+                return cursor.getString(1);
+            }
+        }
+        return null;
+    }
+    public static String getDateByIdSchedule(int id){
+        Cursor cursor = MainActivity.database.query("LichThiDau",null,null,null,null,null,null,null);
+        while (cursor.moveToNext()){
+            if(id == cursor.getInt(0)){
+                return cursor.getString(4);
+            }
+        }
+        return null;
+    }
+    public static ObservableArrayList<Goal> getAllGoalNotOwnByDate(String date){
+        ObservableArrayList<Goal> goals = new ObservableArrayList<>();
+        Cursor cursor = MainActivity.database.
+                rawQuery("select *  " +
+                                "from BanThang where MaLoaiBanThang = 0 or MaLoaiBanThang = 1" ,null);
+        while (cursor.moveToNext()){
+            int id = cursor.getInt(0);
+            int id_match = cursor.getInt(1);
+            int id_player = cursor.getInt(2);
+            int type = cursor.getInt(3);
+            int time = cursor.getInt(4);
+            int id_club = cursor.getInt(5);
+            int id_schedule = getIdScheduleByIdMatch(id_match);
+            String dateScore = getDateByIdSchedule(id_schedule).split(" ")[1];
+            Player player = getPlayerById(id_player);
+            Goal goal = new Goal(id,player,time,type,id_club,id_match);
+            //so sanh ngay
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date1,date2;
+            try {
+                date1 = sdf.parse(date);
+                date2 = sdf.parse(dateScore);
+                //System.out.println(date1.after(date2) || date1.equals(date2));
+                if(date1.after(date2) || date1.equals(date2)){
+                    goals.add(goal);
+                    //System.out.println(player.getName() + " -  " + dateScore)  ;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return goals;
+    }
+
 }

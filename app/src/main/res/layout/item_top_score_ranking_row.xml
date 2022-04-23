@@ -10,13 +10,13 @@
         android:focusable="true"
         android:background="?android:attr/selectableItemBackground">
         <TextView
-            android:id="@+id/tvClubRank"
+            android:id="@+id/tvSttTopScore"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Hạng"
+            android:text="STT"
             android:textColor="@color/black"
-            android:layout_weight="0.8"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"/>
         <View
@@ -24,7 +24,21 @@
             android:layout_height="match_parent"
             android:background="#000000" />
         <TextView
-            android:id="@+id/tvClubName"
+            android:id="@+id/tvNamePlayerTopScore"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cầu thủ"
+            android:textColor="@color/black"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
+            android:id="@+id/tvClubNameTopScore"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,13 +52,13 @@
             android:layout_height="match_parent"
             android:background="#000000" />
         <TextView
-            android:id="@+id/tvWinCount"
+            android:id="@+id/tvTypePlayerTopScore"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Thắng"
+            android:text="Loại cầu thủ"
             android:textColor="@color/black"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:ellipsize="end"
             android:maxLines="1"/>
         <View
@@ -52,42 +66,13 @@
             android:layout_height="match_parent"
             android:background="#000000" />
         <TextView
-            android:id="@+id/tvDrawCount"
+            android:id="@+id/tvNumScore"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Hoà"
+            android:text="Số bàn thắng"
             android:textColor="@color/black"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#000000" />
-        <TextView
-            android:id="@+id/tvLoseCount"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Thua"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#000000" />
-        <TextView
-            android:id="@+id/tvGoalDifference"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Hiệu số"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:ellipsize="end"
             android:maxLines="1"/>
     </LinearLayout>
 </layout>

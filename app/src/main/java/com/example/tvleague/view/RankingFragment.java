@@ -3,6 +3,7 @@ package com.example.tvleague.view;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.databinding.ObservableArrayList;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,12 +18,16 @@ import com.example.tvleague.R;
 import com.example.tvleague.databinding.FragmentRankingBinding;
 import com.example.tvleague.model.Club;
 import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.Goal;
 import com.example.tvleague.model.RankingClub;
 import com.example.tvleague.model.RankingClubAdapter;
+import com.example.tvleague.model.TopScore;
+import com.example.tvleague.model.TopScoreAdapter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +42,10 @@ public class RankingFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private FragmentRankingBinding binding;
     private ArrayList<RankingClub> rankingClubs;
+    private ObservableArrayList<TopScore> topScores;
     private ArrayList<String> dates;
     private RankingClubAdapter rankingClubAdapter;
+    private TopScoreAdapter topScoreAdapter;
     int date_index;
 
     // TODO: Rename and change types of parameters
@@ -98,6 +105,10 @@ public class RankingFragment extends Fragment {
                 date_index = i;
                 rankingClubs = DatabaseRoute.getRankingByDate(dates.get(i));
                 rankingClubAdapter.setRankingClubs(rankingClubs);
+
+                topScores = getTopScoreByDate(dates.get(i));
+                topScoreAdapter.setTopScore(topScores);
+
             }
 
             @Override
@@ -109,6 +120,13 @@ public class RankingFragment extends Fragment {
         binding.rvClubRanking.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         binding.rvClubRanking.setAdapter(rankingClubAdapter);
         binding.rvClubRanking.addItemDecoration(new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL));
+
+        //vua pha luoi
+        topScoreAdapter = new TopScoreAdapter(topScores);
+        binding.rvScoreRanking.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        binding.rvScoreRanking.setAdapter(topScoreAdapter);
+        binding.rvScoreRanking.addItemDecoration(new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL));
+
         return binding.getRoot();
     }
 
@@ -118,5 +136,65 @@ public class RankingFragment extends Fragment {
         binding.roundSpinner.setSelection(dates.size() -1);
         rankingClubs = DatabaseRoute.getRankingByDate(dates.get(date_index));
         rankingClubAdapter.setRankingClubs(rankingClubs);
+
+        topScores = getTopScoreByDate(dates.get(date_index));
+        topScoreAdapter.setTopScore(topScores);
+    }
+    public static boolean isIncludeInList(String name, ObservableArrayList<Goal> goals){
+        for (int i = 0;i<goals.size(); i++){
+            if(goals.get(i).getPlayer().getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static ObservableArrayList<Goal> getUniquePlayerName(ObservableArrayList<Goal> listGoal){
+        ObservableArrayList<Goal> goals = new ObservableArrayList<>();
+        //System.out.println("Size " + listGoal.size());
+        for(int i = 0;i< listGoal.size();i++){
+            if(isIncludeInList(listGoal.get(i).getPlayer().getName(),goals) == false){
+                goals.add(listGoal.get(i));
+            }
+        }
+        return goals;
+    }
+    private static int getQuantityGoalOfPlayer(String name, ObservableArrayList<Goal> listGoal){
+        int result = 0;
+        for(int i = 0; i < listGoal.size(); i++){
+            if(name.equals(listGoal.get(i).getPlayer().getName())) result++;
+        }
+        return  result;
+    }
+    public static ObservableArrayList<TopScore> sortTopScoreByQuantity(ObservableArrayList<TopScore> topScores){
+        Collections.sort(topScores, new Comparator<TopScore>() {
+            @Override
+            public int compare(TopScore player1, TopScore player2) {
+                if (player1.getQuantity_score() < player2.getQuantity_score()) {
+                    return 1;
+                } else {
+                    if (player1.getQuantity_score() == player2.getQuantity_score()) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+            }
+        });
+        return  topScores;
+    }
+    public static ObservableArrayList<TopScore> getTopScoreByDate(String date){
+        ObservableArrayList<TopScore> topScores = new ObservableArrayList<>();
+        ObservableArrayList<Goal> validListGoal = DatabaseRoute.getAllGoalNotOwnByDate(date);
+        ObservableArrayList<Goal> uniquePlayer = getUniquePlayerName(validListGoal);
+        for(int i = 0 ; i < uniquePlayer.size();i++){
+            int quan = getQuantityGoalOfPlayer(uniquePlayer.get(i).getPlayer().getName(),validListGoal);
+            TopScore player = new TopScore(-1,uniquePlayer.get(i).getPlayer(),quan);
+            topScores.add(player);
+        }
+        topScores = sortTopScoreByQuantity(topScores);
+        for(int i = 0 ; i < uniquePlayer.size();i++){
+            topScores.get(i).setIndex(i + 1);
+        }
+        return  topScores;
     }
 }

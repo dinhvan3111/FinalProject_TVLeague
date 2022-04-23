@@ -148,6 +148,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         ObservableArrayList<Goal> goal2 = DatabaseRoute.getListGoal(id_match,id_club2);
                         String score = goal1.size() + " - " + goal2.size();
                         int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(id_club1,id_club2);
+                        schedule.getMatch().setScore(score);
                         DatabaseRoute.updateScore(id_schedule,score);
                         DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
                         binding.tvScore.setText(score);
