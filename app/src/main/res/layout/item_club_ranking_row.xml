@@ -38,6 +38,20 @@
             android:layout_height="match_parent"
             android:background="#000000" />
         <TextView
+            android:id="@+id/tvPoints"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Điểm"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+        <TextView
             android:id="@+id/tvWinCount"
             android:gravity="center"
             android:layout_width="0dp"

@@ -599,6 +599,8 @@ public class DatabaseRoute {
             int isWin = rankingClub.getWinCount() - oldRankingClub.getWinCount();
             int isLose = rankingClub.getLoseCount() - oldRankingClub.getLoseCount();
             int isDraw = rankingClub.getDrawCount() - oldRankingClub.getDrawCount();
+            int changeGoalCount = rankingClub.getGoalCount() - oldRankingClub.getGoalCount();
+            int changeGoalConcededCount = rankingClub.getGoalConcededCount() - oldRankingClub.getGoalConcededCount();
             MainActivity.database.insert("BXH_DoiBong",null, cv);
             if(isWin > 0){ // Nếu sửa trận đấu cũ thành 1 trận thắng
 //                ContentValues cv1 = new ContentValues();
@@ -633,6 +635,12 @@ public class DatabaseRoute {
                 String strSQL = "update BXH_DoiBong set SoTranThua = SoTranThua - 1 where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
                 MainActivity.database.execSQL(strSQL);
             }
+            // Cập nhật bàn thắng bàn thua
+            String strSQL = "update BXH_DoiBong set SoBanThang = SoBanThang + " + changeGoalCount + ", SoBanThua = SoBanThua + " + changeGoalConcededCount + " where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+            MainActivity.database.execSQL(strSQL);
+            // Cập nhật hiệu số
+            strSQL = "update BXH_DoiBong set HieuSo = SoBanThang - SoBanThua where MaDoiBong = " + idClub + " and MaBXH > " + idTable +" and MaBXH <= " + latestRankingTabbleId;
+            MainActivity.database.execSQL(strSQL);
         }
     }
 

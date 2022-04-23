@@ -42,6 +42,7 @@ public class RankingClubAdapter extends RecyclerView.Adapter<RankingClubAdapter.
         binding.tvDrawCount.setText(rankingClub.getDrawCount() + "");
         binding.tvLoseCount.setText(rankingClub.getLoseCount() + "");
         binding.tvGoalDifference.setText(rankingClub.getGoalDifference() + "");
+        binding.tvPoints.setText((rankingClub.getWinCount() * 3 + rankingClub.getDrawCount()) + "");
 
     }
 
