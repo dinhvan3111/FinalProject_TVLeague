@@ -36,6 +36,7 @@ public class LeagueManagementActivity extends AppCompatActivity {
     private ScheduleFragment scheduleFragment;
     private RankingFragment rankingFragment;
     private ListClubFragment listClubFragment;
+    private RegulationFragment regulationFragment;
     private int currentBtn;
     public static BottomNavigationView bottomNavigationView;
     @Override
@@ -118,6 +119,10 @@ public class LeagueManagementActivity extends AppCompatActivity {
                 break;
             case R.id.btnListClub:
                 setTitle("Danh sách đội bóng");
+                break;
+            case R.id.btnRegulation:
+                setTitle("Danh sách đội bóng");
+                break;
         }
     }
 
@@ -135,6 +140,10 @@ public class LeagueManagementActivity extends AppCompatActivity {
                             break;
                         case R.id.btnListClub:
                             replaceFragment(listClubFragment,R.id.btnListClub);
+                            break;
+                        case R.id.btnRegulation:
+                            replaceFragment(regulationFragment,R.id.btnRegulation);
+                            break;
                     }
                 }
                 return true;
@@ -213,5 +222,6 @@ public class LeagueManagementActivity extends AppCompatActivity {
         scheduleFragment = new ScheduleFragment();
         rankingFragment = new RankingFragment();
         listClubFragment = new ListClubFragment();
+        regulationFragment = new RegulationFragment();
     }
 }
