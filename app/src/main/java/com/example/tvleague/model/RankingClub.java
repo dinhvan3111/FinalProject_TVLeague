@@ -1,5 +1,7 @@
 package com.example.tvleague.model;
 
+import com.example.tvleague.view.MainActivity;
+
 import java.util.Comparator;
 
 public class RankingClub {
@@ -116,15 +118,14 @@ public class RankingClub {
     }
 
     public void calGoalDifference(){
-        System.out.println("Đã tính GD");
         this.goalDifference = this.goalCount - this.goalConcededCount;
-        System.out.println(this.goalDifference);
     }
 
     public void calPoint(){
-        System.out.println("Đã tính Points");
-        this.points = this.winCount * 3 + this.drawCount;
-        System.out.println(this.points);
+        System.out.println("Diem thang: " + MainActivity.regulations.getWIN_POINT());
+        this.points = this.winCount * MainActivity.regulations.getWIN_POINT()
+                + this.drawCount * MainActivity.regulations.getDRAW_POINT()
+                + this.loseCount * MainActivity.regulations.getLOSE_POINT();
     }
 
     public int getPoints() {

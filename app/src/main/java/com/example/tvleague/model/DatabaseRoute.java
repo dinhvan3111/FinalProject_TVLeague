@@ -84,8 +84,8 @@ public class DatabaseRoute {
         cv.put("GhiChu",player.getNote());
         MainActivity.database.insert("CauThu",null,cv);
     }
-    public static ArrayList<Player> getPlayersOfClubById(int id_club){
-        ArrayList<Player> players = new ArrayList<>();
+    public static ObservableArrayList<Player> getPlayersOfClubById(int id_club){
+        ObservableArrayList<Player> players = new ObservableArrayList<>();
         Cursor cursor = null;
         try {
             cursor = MainActivity.database.rawQuery("select  * from CauThu", null);
@@ -973,5 +973,25 @@ public class DatabaseRoute {
         cursor.close();
         return goals;
     }
-
+    public static ObservableArrayList<Regulation> getRegulations(){
+        ObservableArrayList<Regulation> regulations = new ObservableArrayList<>();
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from QuyDinh",null);
+        while (cursor.moveToNext()){
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int attr = cursor.getInt(3);
+            int value = cursor.getInt(3);
+            regulations.add(new Regulation(id,name,value,attr,""));
+        }
+        return regulations;
+    }
+    public static void deletePlayerById(int id){
+        int res = MainActivity.database.delete("CauThu","MaCauThu=?",new String[]{id+""});
+    }
+    public  static void changeRelutationById(int id, int value){
+        ContentValues cv = new ContentValues();
+        cv.put("GiaTri",value);
+        MainActivity.database.update("QuyDinh", cv, "MaQuyDinh = ?", new String[]{id + ""});
+    }
 }

@@ -2,21 +2,24 @@ package com.example.tvleague.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tvleague.databinding.ItemRegulationRowBinding;
+import com.example.tvleague.view.MainActivity;
 
 import java.util.ArrayList;
 
 public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.RegulationViewHolder> {
     ArrayList<Regulation> regulationList;
-
+    boolean isStarted = DatabaseRoute.IsStartLeague();
     public RegulationAdapter(ArrayList<Regulation> regulationList) {
         this.regulationList = regulationList;
     }
@@ -45,6 +48,13 @@ public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.Re
             binding.layoutNote.setVisibility(View.VISIBLE);
             binding.regulationNote.setText(regulation.getNote());
         }
+
+        if(isStarted && (regulation.getId() == 1 || regulation.getId() == 2
+                ||regulation.getId() == 3 ||regulation.getId() == 4 ||
+                regulation.getId() == 5) ){
+            binding.btnChangeRegulationNum.setEnabled(false);
+            binding.btnChangeRegulationNum.setTextColor(Color.GRAY);
+        }
         binding.btnChangeRegulationNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,12 +69,20 @@ public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.Re
             @Override
             public void onClick(View view) {
                 String num = binding.edtRegulationNum.getText().toString();
+
+                //kiểm tra thắng > hòa  > thua
+                if((regulation.getId() == 9 && Integer.parseInt(num) >= MainActivity.regulations.getDRAW_POINT())||
+                        (regulation.getId() == 8 && Integer.parseInt(num) >= MainActivity.regulations.getWIN_POINT())
+                    ||(regulation.getId() == 7 && Integer.parseInt(num) <= MainActivity.regulations.getDRAW_POINT())){
+                    Toast.makeText(view.getContext(), "Điểm Thắng > Điểm Hòa > Điểm Thua", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 binding.tvRegulationNum.setText(num);
                 binding.edtRegulationNum.setText(num);
                 // Thay đổi quy định trong database
-                // TO DO
-                // ...
-
+                DatabaseRoute.changeRelutationById(regulation.getId(),Integer.parseInt(num));
+                Toast.makeText(view.getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
                 binding.tvRegulationNum.setVisibility(View.VISIBLE);
                 binding.edtRegulationNum.setVisibility(View.GONE);
                 binding.btnChangeRegulationNum.setVisibility(View.VISIBLE);

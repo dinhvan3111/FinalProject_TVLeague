@@ -26,4 +26,11 @@ public class ClubRegistedActivity extends AppCompatActivity {
         binding.listAddedClub.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         binding.listAddedClub.setAdapter(adapter);
     }
+
+    @Override
+    protected void onResume() {
+        listAddedClub = DatabaseRoute.getAllClub();
+        adapter.setClub(listAddedClub);
+        super.onResume();
+    }
 }

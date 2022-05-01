@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.example.tvleague.R;
 import com.example.tvleague.databinding.FragmentRegulationBinding;
+import com.example.tvleague.model.DatabaseRoute;
+import com.example.tvleague.model.LeagueRegulations;
 import com.example.tvleague.model.Regulation;
 import com.example.tvleague.model.RegulationAdapter;
 
@@ -64,10 +66,20 @@ public class RegulationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        // Lấy dữ liệu cho regulationList
-        regulationList = new ArrayList<>();
-        regulationList.add(new Regulation("Số cầu thủ tối thiểu",15,"Số lượng cầu thủ tối thiểu được phép tham gia một đội"));
-        regulationList.add(new Regulation("Số cầu thủ tối đa",22,""));
+//        // Lấy dữ liệu cho regulationList
+
+        regulationList = DatabaseRoute.getRegulations();
+
+//        regulationList = new ArrayList<>();
+//        regulationList.add(new Regulation(-1,"Độ tuổi tối tối thiểu", LeagueRegulations.MIN_AGE,"Độ tuổi tối thiểu được phép tham gia một đội"));
+//        regulationList.add(new Regulation(-1,"Độ tuổi tối tối đa",LeagueRegulations.MAX_AGE,"Độ tuổi tối đa được phép tham gia một đội"));
+//        regulationList.add(new Regulation(-1,"Số cầu thủ tối đa",LeagueRegulations.MAX_PLAYERS,""));
+//        regulationList.add(new Regulation(-1,"Số cầu thủ tối thiểu",LeagueRegulations.MIN_PLAYERS,"Số lượng cầu thủ tối thiểu được phép tham gia một đội"));
+//        regulationList.add(new Regulation(-1,"Số cầu thủ nước ngoài tối đa",LeagueRegulations.MAX_FOREIGN_PLAYERS,""));
+//        regulationList.add(new Regulation(-1,"Phút tối đa",LeagueRegulations.MAX_SCORE_TIME,"Thời gian ghi bàn tối đa trong trận đấu."));
+//        regulationList.add(new Regulation(-1,"Điểm thắng",LeagueRegulations.WIN_POINT,""));
+//        regulationList.add(new Regulation(-1,"Điểm hòa",LeagueRegulations.DRAW_POINT,""));
+//        regulationList.add(new Regulation(-1,"Điểm thua",LeagueRegulations.LOSE_POINT,""));
     }
 
     @Override

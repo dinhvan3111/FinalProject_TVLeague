@@ -1,6 +1,7 @@
 package com.example.tvleague.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.ObservableArrayList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.DatePickerDialog;
@@ -22,9 +23,10 @@ import com.example.tvleague.model.PlayerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Observable;
 
 public class AddClubForm extends AppCompatActivity {
-    private ArrayList<Player> listAddedPlayer = new ArrayList<>();
+    private ObservableArrayList<Player> listAddedPlayer = new ObservableArrayList<>();
     private PlayerAdapter adapter;
     private ActivityAddClubFormBinding binding;
     @Override

@@ -41,5 +41,10 @@
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Quản lý giải đấu"/>
+        <Button
+            android:id="@+id/btnLeagueRegulation"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Quản lý quy định"/>
     </LinearLayout>
 </layout>

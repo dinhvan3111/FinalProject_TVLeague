@@ -33,7 +33,10 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ClubViewHolder
         ItemClubRowBinding binding = ItemClubRowBinding.inflate(layoutInflater,parent,false);
         return new ClubViewHolder(binding);
     }
-
+    public void setClub(ArrayList<Club> clubs){
+        this.listClub = clubs;
+        notifyDataSetChanged();
+    }
 //    @Override
 //    public int getItemViewType(int position) {
 //        return super.getItemViewType(position);

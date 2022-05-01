@@ -28,6 +28,7 @@ import com.example.tvleague.model.DatabaseRoute;
 import com.example.tvleague.model.Goal;
 import com.example.tvleague.model.GoalAdapter;
 import com.example.tvleague.model.GoalRecyclerViewClickListener;
+import com.example.tvleague.model.LeagueRegulations;
 import com.example.tvleague.model.Match;
 import com.example.tvleague.model.Player;
 import com.example.tvleague.model.Schedule;
@@ -217,7 +218,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
         Button b1 = (Button) d.findViewById(R.id.button1);
         Button b2 = (Button) d.findViewById(R.id.button2);
         final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
-        np.setMaxValue(96);
+        np.setMaxValue(MainActivity.regulations.getMAX_SCORE_TIME());
         np.setMinValue(0);
         np.setValue(currentTime);
         np.setWrapSelectorWheel(true);

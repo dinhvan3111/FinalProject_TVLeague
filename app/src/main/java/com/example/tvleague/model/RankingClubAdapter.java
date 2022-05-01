@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tvleague.databinding.ItemClubRankingRowBinding;
+import com.example.tvleague.view.MainActivity;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,9 @@ public class RankingClubAdapter extends RecyclerView.Adapter<RankingClubAdapter.
         binding.tvDrawCount.setText(rankingClub.getDrawCount() + "");
         binding.tvLoseCount.setText(rankingClub.getLoseCount() + "");
         binding.tvGoalDifference.setText(rankingClub.getGoalDifference() + "");
-        binding.tvPoints.setText((rankingClub.getWinCount() * 3 + rankingClub.getDrawCount()) + "");
+        binding.tvPoints.setText((rankingClub.getWinCount() * MainActivity.regulations.getWIN_POINT()
+                + rankingClub.getDrawCount())*MainActivity.regulations.getDRAW_POINT() +
+                 rankingClub.getLoseCount()*MainActivity.regulations.getLOSE_POINT() + "");
 
     }
 
