@@ -126,7 +126,6 @@ public class RankingFragment extends Fragment {
         binding.rvScoreRanking.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         binding.rvScoreRanking.setAdapter(topScoreAdapter);
         binding.rvScoreRanking.addItemDecoration(new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL));
-
         return binding.getRoot();
     }
 

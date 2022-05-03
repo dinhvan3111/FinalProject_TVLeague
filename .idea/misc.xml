@@ -50,6 +50,10 @@
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/menu/menu_search.xml" value="0.20925925925925926" />
         <entry key="..\:/Deadline/TKPM/FinalProject_TVLeague/app/src/main/res/menu/update_match_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/drawable/custom_bottom_menu.xml" value="0.1" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/drawable/custom_button.xml" value="0.1795" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/drawable/custom_button_disable.xml" value="0.1795" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/drawable/custom_button_enable.xml" value="0.1795" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/drawable/ic_baseline_timer_24.xml" value="0.1795" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_add_club_form.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/activity_club_registed.xml" value="0.28732394366197184" />
@@ -71,6 +75,7 @@
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/layout_add_goal.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/layout/layout_input_player_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/menu/bottom_nav_menu.xml" value="0.21388888888888888" />
+        <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/menu/menu_search.xml" value="0.21388888888888888" />
         <entry key="..\:/Users/DELL/Documents/GitHub/FinalProject_TVLeague/app/src/main/res/menu/update_match_menu.xml" value="0.25416666666666665" />
       </map>
     </option>

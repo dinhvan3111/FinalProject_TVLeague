@@ -177,13 +177,20 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
                         MatchDetail.typeGoal.clear();
                         switch (i){
                             case R.id.normalGoal:
+                                MatchDetail.typeGoal.clear();
                                 MatchDetail.typeGoal.add(0);
                                 break;
                             case R.id.penaltyKick:
+                                MatchDetail.typeGoal.clear();
                                 MatchDetail.typeGoal.add(1);
                                 break;
                             case R.id.ownGoal:
+                                MatchDetail.typeGoal.clear();
                                 MatchDetail.typeGoal.add(2);
+                                break;
+                            default:
+                                MatchDetail.typeGoal.clear();
+                                MatchDetail.typeGoal.add(0);
                                 break;
                         }
                     }
@@ -199,9 +206,13 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
                         int id_club = DatabaseRoute.getIdClubByName(club);
                         int id_club_other = DatabaseRoute.getIdClubByName(clubOther);
                         int type_goal = 0;
-                        if( MatchDetail.typeGoal.size() != 0){
-                            type_goal =  MatchDetail.typeGoal.get(0);
+//                        if( MatchDetail.typeGoal.size() != 0){
+//                            type_goal =  MatchDetail.typeGoal.get(0);
+//                        }
+                        if(MatchDetail.typeGoal.size() != 0){
+                            type_goal = MatchDetail.typeGoal.get(MatchDetail.typeGoal.size() - 1);
                         }
+                        MatchDetail.typeGoal.clear();
                         Goal goal;
                         int time = Integer.parseInt(layoutAddGoalBinding.edtTime.getText().toString());
                         if(type_goal!=2){//không phản lưới nhà

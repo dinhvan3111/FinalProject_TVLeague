@@ -120,9 +120,9 @@ public class LeagueManagementActivity extends AppCompatActivity {
             case R.id.btnListClub:
                 setTitle("Danh sách đội bóng");
                 break;
-            case R.id.btnRegulation:
-                setTitle("Danh sách đội bóng");
-                break;
+//            case R.id.btnRegulation:
+//                setTitle("Danh sách đội bóng");
+//                break;
         }
     }
 
@@ -141,9 +141,9 @@ public class LeagueManagementActivity extends AppCompatActivity {
                         case R.id.btnListClub:
                             replaceFragment(listClubFragment,R.id.btnListClub);
                             break;
-                        case R.id.btnRegulation:
-                            replaceFragment(regulationFragment,R.id.btnRegulation);
-                            break;
+//                        case R.id.btnRegulation:
+//                            replaceFragment(regulationFragment,R.id.btnRegulation);
+//                            break;
                     }
                 }
                 return true;

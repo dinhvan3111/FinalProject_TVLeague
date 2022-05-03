@@ -22,26 +22,40 @@
             android:textStyle="bold"
             android:layout_marginBottom="50dp"/>
         <Button
+            android:textColor="#fff"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button"
             android:id="@+id/btnAddClub"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Thêm đội bóng mới"/>
         <Button
+            android:textColor="#fff"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button"
             android:id="@+id/btnListAddedClub"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Đội bóng đã đăng ký"/>
         <Button
+            android:textColor="#fff"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button"
             android:id="@+id/btnCreateCalendar"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Bắt đầu lập lịch" />
         <Button
+            android:textColor="#fff"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button"
             android:id="@+id/btnLeagueManagement"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Quản lý giải đấu"/>
         <Button
+            android:textColor="#fff"
+            android:background="@drawable/custom_button"
             android:id="@+id/btnLeagueRegulation"
             android:layout_width="230dp"
             android:layout_height="wrap_content"

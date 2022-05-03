@@ -14,8 +14,7 @@ public class LeagueRegulations {
     private int WIN_POINT ;
     private int DRAW_POINT;
     private int LOSE_POINT;
-    private int RANKING_PRIORITY_1; // 1.Điểm > Hiệu số > Kết quả đối đầu
-    private int RANKING_PRIORITY_2 = 2; // 2. ...
+    private int RANKING_PRIORITY;
 
     public LeagueRegulations() {
         ObservableArrayList<Regulation> regulations = DatabaseRoute.getRegulations();
@@ -28,8 +27,7 @@ public class LeagueRegulations {
         this.WIN_POINT = regulations.get(6).getRegulationNum();
         this.DRAW_POINT = regulations.get(7).getRegulationNum();
         this.LOSE_POINT = regulations.get(8).getRegulationNum();
-        this.RANKING_PRIORITY_1  = regulations.get(9).getRegulationNum();
-        this.RANKING_PRIORITY_2  = regulations.get(9).getRegulationNum();
+        this.RANKING_PRIORITY  = regulations.get(9).getRegulationNum();
     }
 
     public int getMIN_AGE() {
@@ -104,19 +102,11 @@ public class LeagueRegulations {
         this.LOSE_POINT = LOSE_POINT;
     }
 
-    public int getRANKING_PRIORITY_1() {
-        return RANKING_PRIORITY_1;
+    public int getRANKING_PRIORITY() {
+        return RANKING_PRIORITY;
     }
 
-    public void setRANKING_PRIORITY_1(int RANKING_PRIORITY_1) {
-        this.RANKING_PRIORITY_1 = RANKING_PRIORITY_1;
-    }
-
-    public int getRANKING_PRIORITY_2() {
-        return RANKING_PRIORITY_2;
-    }
-
-    public void setRANKING_PRIORITY_2(int RANKING_PRIORITY_2) {
-        this.RANKING_PRIORITY_2 = RANKING_PRIORITY_2;
+    public void setRANKING_PRIORITY(int RANKING_PRIORITY_1) {
+        this.RANKING_PRIORITY = RANKING_PRIORITY;
     }
 }

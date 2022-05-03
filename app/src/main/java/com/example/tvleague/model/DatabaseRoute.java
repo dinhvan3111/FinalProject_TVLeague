@@ -350,7 +350,7 @@ public class DatabaseRoute {
         }
     }
 
-    public static void insertNewRankingTableByIdRankingTable(Schedule schedule, String date){
+    public static void insertNewRankingTableByIdRankingTable(Schedule schedule, String date, int priority){
 //        Collections.sort(rankingClubs, new RankingClub.SortbyPriority1());
 //        // Set rank after sorting
 //        for(int i= 0; i< rankingClubs.size();i++){
@@ -408,7 +408,7 @@ public class DatabaseRoute {
         }
         updateRankingClubAfterMatchResult(schedule,schedule.getClub1().getId(),newIdRankingTable,0);
         updateRankingClubAfterMatchResult(schedule,schedule.getClub2().getId(),newIdRankingTable,0);
-        sortRankingClubAfterMatchResult(date);
+        sortRankingClubAfterMatchResult(date,priority );
     }
 
     public static void updateRankingTableByIdRankingTable(int idRankingTable, ArrayList<RankingClub> rankingClubs){
@@ -644,7 +644,7 @@ public class DatabaseRoute {
         }
     }
 
-    public static void sortRankingClubAfterMatchResult(String date){
+    public static void sortRankingClubAfterMatchResult(String date, int priority){
         int idRankingTable = 0;
         Cursor cursor = MainActivity.database.rawQuery("select * from BXH where Ngay = \"" + date + "\";" , null);
         while (cursor.moveToNext()){
@@ -656,7 +656,14 @@ public class DatabaseRoute {
             rankingClub.calPoint();
             rankingClub.calGoalDifference();
         }
-        Collections.sort(rankingClubs, new RankingClub.SortbyPriority1());
+        if(priority == 1)
+            Collections.sort(rankingClubs, new RankingClub.SortbyPriority1());
+        else if(priority == 2)
+            Collections.sort(rankingClubs, new RankingClub.SortbyPriority2());
+        else if(priority == 3)
+            Collections.sort(rankingClubs, new RankingClub.SortbyPriority3());
+        else if(priority == 4)
+            Collections.sort(rankingClubs, new RankingClub.SortbyPriority4());
         // Set rank after sorting
         for(int i= 0; i< rankingClubs.size();i++){
             rankingClubs.get(i).setRank(i + 1);
@@ -667,7 +674,7 @@ public class DatabaseRoute {
         updateRankingTableByIdRankingTable(idRankingTable,rankingClubs);
     }
 
-    public static void sortAllRankingTableAfterEditOldMatch(String oldDate){
+    public static void sortAllRankingTableAfterEditOldMatch(String oldDate, int priority){
         Cursor cursor = MainActivity.database.rawQuery("select * from BXH where Ngay = \""+ oldDate + "\"",null);
         int oldRankingTableId = 0;
         if(cursor.moveToNext()){
@@ -689,11 +696,11 @@ public class DatabaseRoute {
                 date = cursor.getString(1);
             }
             cursor.close();
-            sortRankingClubAfterMatchResult(date);
+            sortRankingClubAfterMatchResult(date,priority);
         }
     }
 
-    public static void updateRankingTableAfterMatchResult(Schedule schedule) {
+    public static void updateRankingTableAfterMatchResult(Schedule schedule, int priority) {
         String date = schedule.getDateTime();
         String [] arrayString = date.split(" ");
         date = arrayString[1];
@@ -719,12 +726,12 @@ public class DatabaseRoute {
                 updateRankingClubAfterMatchResult(schedule,idClub2,idRankingTable,1);
                 // Sắp xếp lại bảng xếp hạng
             }
-            sortAllRankingTableAfterEditOldMatch(date);
+            sortAllRankingTableAfterEditOldMatch(date,priority );
         }
         else{
             // TO DO
             System.out.println(" BXH Moi");
-            insertNewRankingTableByIdRankingTable(schedule,date);
+            insertNewRankingTableByIdRankingTable(schedule,date,priority);
         }
     }
 
@@ -780,6 +787,111 @@ public class DatabaseRoute {
             cursor2.close();
         }
         return rankingClubsByDate;
+    }
+    public static int whoWinInMatch(Match match){
+        String score[] = match.getScore().split(" - ");
+        int score1 = Integer.parseInt(score[0]);
+        int score2 = Integer.parseInt(score[1]);
+        if(score1 > score2) return 1;// đội nhà thắng
+        else if(score2 > score1) return -1; // đội khách thắng
+        else return 0;//hòa
+
+    }
+    public static int confrontationTwoClub(int id_club_1, int id_club_2){// so sánh đối đầu
+        int idMatch1 = getIdMatchByTwoIdClub(id_club_1,id_club_2);
+        int idMatch2 = getIdMatchByTwoIdClub(id_club_2,id_club_1);
+        Match match1  = getMatchById(idMatch1);
+        Match match2 = getMatchById(idMatch2);
+        if (match1.getScore() == null && match2.getScore() == null)
+            return 0;
+        else if(match1.getScore()!=null && match2.getScore() == null){
+            String score[] = match1.getScore().split(" - ");
+            int score1 = Integer.parseInt(score[0]);
+            int score2 = Integer.parseInt(score[1]);
+            if(score1 > score2) return 1;
+            else if(score2 > score1) return -1;
+            else return 0;
+        }
+        else if(match1.getScore()==null && match2.getScore() != null){
+            String score[] = match1.getScore().split(" - ");
+            int score1 = Integer.parseInt(score[0]);
+            int score2 = Integer.parseInt(score[1]);
+            if(score1 > score2) return -1;
+            else if(score2 > score1) return 1;
+            else return 0;
+        }
+        else{
+            int winMatch1 = whoWinInMatch(match1);
+            int winMatch2 = whoWinInMatch(match2);
+            if((winMatch1 == 1 && winMatch2 == -1)|| (winMatch1 == 1 && winMatch2 == 0))return 1;// đội có id1 thắng
+            else if((winMatch1 == -1 && winMatch2 == 1)|| (winMatch1 == -1 && winMatch2 == 0))return -1;// đội có id2 thắng
+            else if((winMatch1 == 1 && winMatch2 == 1)||(winMatch1 == -1 && winMatch2 == -1)){
+                String score[] = match1.getScore().split(" - ");
+                int score1 = Integer.parseInt(score[0]);
+                int score2 = Integer.parseInt(score[1]);
+
+                String scoreMatch2[] = match2.getScore().split(" - ");
+                score1 +=Integer.parseInt(scoreMatch2[1]);// tổng bàn thắng
+                score2 +=Integer.parseInt(scoreMatch2[0]);// tổng bàn thắng
+
+                //so sanh ban thang 2 doi dau
+                if(score1 > score2 )return 1;
+                else if(score2 >score1) return   -1;
+                else return 0;
+
+            }
+        }
+        return 0;
+    }
+    public static int getTotalGoalAwayMatch(int id_club){
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from LichThiDau where MaDoiKhach = ?",
+                        new String[] {String.valueOf(id_club)});
+        ObservableArrayList<Integer> id_schedule = new ObservableArrayList<>();
+        while(cursor.moveToNext()){
+            id_schedule.add(cursor.getInt(0));
+        }
+        cursor.close();
+        ObservableArrayList<String> scores = new ObservableArrayList<>();
+        for(int i = 0; i<id_schedule.size(); i++){
+            Cursor cursor1 = MainActivity.database.
+                    rawQuery("select * from TranDau where MaTranDau = ? and TiSo not NULL",
+                            new String[] {String.valueOf(id_schedule.get(i))});
+            while(cursor1.moveToNext()){
+                scores.add(cursor1.getString(1));
+            }
+            cursor1.close();
+        }
+        int total = 0;
+        for(int i = 0 ; i < scores.size(); i++){
+            total += Integer.parseInt( scores.get(i).split(" - ")[1]);
+        }
+        return total;
+    }
+    public static int getTotalGoalHomeMatch(int id_club){
+        Cursor cursor = MainActivity.database.
+                rawQuery("select * from LichThiDau where MaDoiNha = ?",
+                        new String[] {String.valueOf(id_club)});
+        ObservableArrayList<Integer> id_schedule = new ObservableArrayList<>();
+        while(cursor.moveToNext()){
+            id_schedule.add(cursor.getInt(0));
+        }
+        cursor.close();
+        ObservableArrayList<String> scores = new ObservableArrayList<>();
+        for(int i = 0; i<id_schedule.size(); i++){
+            Cursor cursor1 = MainActivity.database.
+                    rawQuery("select * from TranDau where MaTranDau = ? and TiSo not NULL",
+                            new String[] {String.valueOf(id_schedule.get(i))});
+            while(cursor1.moveToNext()){
+                scores.add(cursor1.getString(1));
+            }
+            cursor1.close();
+        }
+        int total = 0;
+        for(int i = 0 ; i < scores.size(); i++){
+            total += Integer.parseInt( scores.get(i).split(" - ")[0]);
+        }
+        return total;
     }
 
     public static boolean IsStartLeague(){

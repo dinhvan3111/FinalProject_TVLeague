@@ -49,7 +49,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     public static ObservableArrayList<Integer> typeGoal = new ObservableArrayList<>();
     public static ObservableArrayList<String> NameOfClub = new ObservableArrayList<>();
     public static ObservableArrayList<String> choosePlayer = new ObservableArrayList<>();
-
+    LeagueRegulations regulations = new LeagueRegulations();
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -131,8 +131,9 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         int id_club_other = DatabaseRoute.getIdClubByName(clubOther);
                         int type_goal = 0;
                         if(typeGoal.size() != 0){
-                            type_goal = typeGoal.get(0);
+                            type_goal = typeGoal.get(typeGoal.size() - 1);
                         }
+                        typeGoal.clear();
                         Goal goal;
                         if(type_goal!=2){//không phản lưới nhà
                             goal = new Goal(-1,player,timeScore,type_goal,id_club,id_match);
@@ -151,7 +152,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(id_club1,id_club2);
                         schedule.getMatch().setScore(score);
                         DatabaseRoute.updateScore(id_schedule,score);
-                        DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
+                        DatabaseRoute.updateRankingTableAfterMatchResult(schedule, regulations.getRANKING_PRIORITY());
                         binding.tvScore.setText(score);
 
                         club2GoalAdapter.setGoalList(goal2);
@@ -174,14 +175,22 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                         typeGoal.clear();
                         switch (i){
                             case R.id.normalGoal:
+                                typeGoal.clear();
                                 typeGoal.add(0);
                                 break;
                             case R.id.penaltyKick:
+                                typeGoal.clear();
                                 typeGoal.add(1);
                                 break;
                             case R.id.ownGoal:
+                                typeGoal.clear();
                                 typeGoal.add(2);
                                 break;
+                            default:
+                                typeGoal.clear();
+                                typeGoal.add(0);
+                                break;
+
                         }
                     }
                 });
@@ -189,7 +198,7 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
             case R.id.mnu_no_goal:
                 int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(schedule.getClub1().getId(),schedule.getClub2().getId());
                 DatabaseRoute.updateScore(id_schedule,"0-0");
-                DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
+                DatabaseRoute.updateRankingTableAfterMatchResult(schedule,regulations.getRANKING_PRIORITY());
                 binding.tvScore.setText("0-0");
                 break;
         }
@@ -287,13 +296,13 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("Nhan resume o matchdetail");
+        regulations = new LeagueRegulations();
     }
 
     @Override
     public void goalRecyclerViewListClicked(boolean isDeleted) {
         if(isDeleted){
-            DatabaseRoute.updateRankingTableAfterMatchResult(schedule);
+            DatabaseRoute.updateRankingTableAfterMatchResult(schedule, regulations.getRANKING_PRIORITY());
         }
     }
 }

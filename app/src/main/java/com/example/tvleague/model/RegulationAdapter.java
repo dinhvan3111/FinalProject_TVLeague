@@ -51,7 +51,8 @@ public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.Re
 
         if(isStarted && (regulation.getId() == 1 || regulation.getId() == 2
                 ||regulation.getId() == 3 ||regulation.getId() == 4 ||
-                regulation.getId() == 5) ){
+                regulation.getId() == 5||
+                regulation.getId() == 10) ){
             binding.btnChangeRegulationNum.setEnabled(false);
             binding.btnChangeRegulationNum.setTextColor(Color.GRAY);
         }
@@ -77,7 +78,13 @@ public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.Re
                     Toast.makeText(view.getContext(), "Điểm Thắng > Điểm Hòa > Điểm Thua", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                
+                //kiểm tra priority từ 1->4
+                if(regulation.getId() == 10 &&(Integer.parseInt(num) > 4) ||(Integer.parseInt(num) == 0)){
+                    Toast.makeText(view.getContext(), "Ưu tiên chỉ từ 1->4", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                
                 binding.tvRegulationNum.setText(num);
                 binding.edtRegulationNum.setText(num);
                 // Thay đổi quy định trong database

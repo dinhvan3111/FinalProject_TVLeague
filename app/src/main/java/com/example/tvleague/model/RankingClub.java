@@ -1,5 +1,7 @@
 package com.example.tvleague.model;
 
+import android.provider.ContactsContract;
+
 import com.example.tvleague.view.MainActivity;
 
 import java.util.Comparator;
@@ -26,7 +28,7 @@ public class RankingClub {
         this.round = round;
         this.goalDifference = this.goalCount - this.goalConcededCount;
     }
-    // Ưu tiên 1: Điếm số -> Hiệu số bàn thắng -> Kết quả đối đầu
+    // Ưu tiên 1: Điếm số -> Hiệu số bàn thắng -> Kết quả đối đầu -> bàn thắng
     public static class SortbyPriority1 implements Comparator<RankingClub>{
 
         @Override
@@ -46,13 +48,131 @@ public class RankingClub {
                 }
                 else{ // Bằng hiệu số
                     // Điều kiện kết quả đối đầu
-                    return 0;
+                    int confrontation = DatabaseRoute.confrontationTwoClub(rankingClub1.getClub().getId(),
+                            rankingClub2.getClub().getId());
+                    if(confrontation == 1)//club 1 hơn đối đầu
+                        return -1;
+                    else if(confrontation == -1)//club 2 hơn đối đầu
+                        return 1;
+                    else if(confrontation == 0){// bằng đối đầu
+                        // Điều kiện tổng bàn thắng
+                        return -1 * RankingClub.compareTotalGoalOfTwoClub(rankingClub1.getClub().getId(),
+                                rankingClub2.getClub().getId());
+                    }
+                }
+            }
+            return 0;
+        }
+
+    }
+    // Ưu tiên 2: Điếm số -> Đối đầu -> Hiệu số -> bàn thắng
+    public static class SortbyPriority2 implements Comparator<RankingClub>{
+
+        @Override
+        public int compare(RankingClub rankingClub1, RankingClub rankingClub2) {
+            if(rankingClub1.points > rankingClub2.points){ // Hơn điểm
+                return -1;
+            }
+            else if (rankingClub1.points < rankingClub2.points){ // Thua điểm
+                return 1;
+            }
+            else{ // Bằng điểm
+                int confrontation = DatabaseRoute.confrontationTwoClub(rankingClub1.getClub().getId(),
+                        rankingClub2.getClub().getId());
+                if(confrontation == 1)//club 1 hơn đối đầu
+                    return -1;
+                else if(confrontation == -1)//club 2 hơn đối đầu
+                    return 1;
+                else if(confrontation == 0){// bằng đối đầu
+                    if(rankingClub1.goalDifference > rankingClub2.goalDifference){ // Hơn hiệu số
+                        return -1;
+                    }
+                    else if(rankingClub1.goalDifference < rankingClub2.goalDifference){ // Thua hiệu số
+                        return 1;
+                    }
+                    else{ // Bằng hiệu số
+                        // Điều kiện tổng bàn thắng
+                        return -1 * RankingClub.compareTotalGoalOfTwoClub(rankingClub1.getClub().getId(),
+                                rankingClub2.getClub().getId());
+                    }
+                }
+
+
+            }
+            return 0;
+        }
+
+    }
+
+    // Ưu tiên 3: Điếm số ->  Hiệu số -> bàn thắng -> Đối đầu
+    public static class SortbyPriority3 implements Comparator<RankingClub>{
+
+        @Override
+        public int compare(RankingClub rankingClub1, RankingClub rankingClub2) {
+            if(rankingClub1.points > rankingClub2.points){ // Hơn điểm
+                return -1;
+            }
+            else if (rankingClub1.points < rankingClub2.points){ // Thua điểm
+                return 1;
+            }
+            else{ // Bằng điểm
+                if(rankingClub1.goalDifference > rankingClub2.goalDifference){ // Hơn hiệu số
+                    return -1;
+                }
+                else if(rankingClub1.goalDifference < rankingClub2.goalDifference){ // Thua hiệu số
+                    return 1;
+                }
+                else{ // Bằng hiệu số
+                    // Điều kiện bàn thắng
+                    int compareScore = compareTotalGoalOfTwoClub(rankingClub1.getClub().getId(),
+                            rankingClub2.getClub().getId());
+                    if(compareScore == 1) return  -1;
+                    else if(compareScore == -1) return 1;
+                    else{//bằng tổng bàn thắng
+                        return -1 * DatabaseRoute.confrontationTwoClub(rankingClub1.getClub().getId(),
+                                rankingClub2.getClub().getId());
+                    }
                 }
             }
         }
 
     }
 
+    // Ưu tiên 4: Điếm số ->  Bàn thắng -> Hiệu số -> Đối đầu
+    public static class SortbyPriority4 implements Comparator<RankingClub>{
+
+        @Override
+        public int compare(RankingClub rankingClub1, RankingClub rankingClub2) {
+            if(rankingClub1.points > rankingClub2.points){ // Hơn điểm
+                return -1;
+            }
+            else if (rankingClub1.points < rankingClub2.points){ // Thua điểm
+                return 1;
+            }
+            else{ // Bằng điểm
+                //So sánh bàn thắng
+                int compareScore = compareTotalGoalOfTwoClub(rankingClub1.getClub().getId(),
+                        rankingClub2.getClub().getId());
+                if(compareScore == 1) return  -1;
+                else if(compareScore == -1) return 1;
+                else{//bằng tổng bàn thắng
+                    //So sánh hiệu số
+                    if(rankingClub1.goalDifference > rankingClub2.goalDifference){ // Hơn hiệu số
+                        return -1;
+                    }
+                    else if(rankingClub1.goalDifference < rankingClub2.goalDifference){ // Thua hiệu số
+                        return 1;
+                    }
+                    else{ // Bằng hiệu số
+                        //so sánh đối đầu
+                        return -1 * DatabaseRoute.confrontationTwoClub(rankingClub1.getClub().getId(),
+                                rankingClub2.getClub().getId());
+                    }
+                }
+            }
+        }
+
+    }
     public Club getClub() {
         return club;
     }
@@ -142,5 +262,14 @@ public class RankingClub {
 
     public void setRound(int round) {
         this.round = round;
+    }
+    public static   int compareTotalGoalOfTwoClub(int id_club_1, int id_club_2){
+        int totalScoreClub1 = DatabaseRoute.getTotalGoalHomeMatch(id_club_1)
+                + DatabaseRoute.getTotalGoalAwayMatch(id_club_1);
+        int totalScoreClub2 = DatabaseRoute.getTotalGoalHomeMatch(id_club_2)
+                + DatabaseRoute.getTotalGoalAwayMatch(id_club_2);
+        if(totalScoreClub1  > totalScoreClub2) return 1;
+        else if(totalScoreClub1 < totalScoreClub2) return -1;
+        else return 0;
     }
 }

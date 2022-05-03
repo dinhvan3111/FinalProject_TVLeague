@@ -75,7 +75,7 @@ public class ScheduleFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         listSchedules = new ArrayList<>();
-        listSchedules = DatabaseRoute.getMatchByRound( 1);
+        listSchedules = DatabaseRoute.getMatchByRound(1);
         round = new ArrayList<>();
         ArrayList<String> first_leg = new ArrayList<>();
         ArrayList<String> second_leg = new ArrayList<>();
