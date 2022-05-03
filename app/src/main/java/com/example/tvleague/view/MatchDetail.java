@@ -197,9 +197,9 @@ public class MatchDetail extends AppCompatActivity implements NumberPicker.OnVal
                 break;
             case R.id.mnu_no_goal:
                 int id_schedule = DatabaseRoute.getIdScheduleByTwoIdClub(schedule.getClub1().getId(),schedule.getClub2().getId());
-                DatabaseRoute.updateScore(id_schedule,"0-0");
+                DatabaseRoute.updateScore(id_schedule,"0 - 0");
                 DatabaseRoute.updateRankingTableAfterMatchResult(schedule,regulations.getRANKING_PRIORITY());
-                binding.tvScore.setText("0-0");
+                binding.tvScore.setText("0 - 0");
                 break;
         }
         return super.onOptionsItemSelected(item);

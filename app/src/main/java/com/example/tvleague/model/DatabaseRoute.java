@@ -813,7 +813,7 @@ public class DatabaseRoute {
             else return 0;
         }
         else if(match1.getScore()==null && match2.getScore() != null){
-            String score[] = match1.getScore().split(" - ");
+            String score[] = match2.getScore().split(" - ");
             int score1 = Integer.parseInt(score[0]);
             int score2 = Integer.parseInt(score[1]);
             if(score1 > score2) return -1;
@@ -864,6 +864,7 @@ public class DatabaseRoute {
         }
         int total = 0;
         for(int i = 0 ; i < scores.size(); i++){
+            System.out.println("ti so trong db: " + scores.get(i));
             total += Integer.parseInt( scores.get(i).split(" - ")[1]);
         }
         return total;
@@ -1094,7 +1095,14 @@ public class DatabaseRoute {
             String name = cursor.getString(1);
             int attr = cursor.getInt(3);
             int value = cursor.getInt(3);
-            regulations.add(new Regulation(id,name,value,attr,""));
+            if(id == 10)
+                regulations.add(new Regulation(id,name,value,attr,
+                        "1. Điếm số -> Hiệu số -> Đối đầu -> Bàn thắng\n"
+                +"2. Điếm số -> Đối đầu -> Hiệu số -> Bàn thắng\n"
+                +"3. Điếm số ->  Hiệu số -> Bàn thắng -> Đối đầu\n"
+                +"4. Điếm số ->  Bàn thắng -> Hiệu số -> Đối đầu"));
+            else
+                regulations.add(new Regulation(id,name,value,attr,""));
         }
         return regulations;
     }

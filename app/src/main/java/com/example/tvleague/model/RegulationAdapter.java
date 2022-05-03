@@ -71,16 +71,30 @@ public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.Re
             public void onClick(View view) {
                 String num = binding.edtRegulationNum.getText().toString();
 
+                //kiểm tra tuổi tối đa > tuổi tối thiểu
+                if((regulation.getId() == 1 && Integer.parseInt(num) >= regulationList.get(1).getRegulationNum())||
+                        (regulation.getId() == 2 && Integer.parseInt(num) <= regulationList.get(0).getRegulationNum())){
+                    Toast.makeText(view.getContext(), "Tuổi tối đa > Tuổi tối thiểu", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //kiểm tra số lượng cầu thủ tối đa > số lượng cầu thủ tối thiểu
+                if((regulation.getId() == 3 && Integer.parseInt(num) >= regulationList.get(3).getRegulationNum())||
+                        (regulation.getId() == 4 && Integer.parseInt(num) <= regulationList.get(2).getRegulationNum())){
+                    Toast.makeText(view.getContext(), "Số cầu thủ tối đa > Số cầu thủ tối thiểu", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 //kiểm tra thắng > hòa  > thua
-                if((regulation.getId() == 9 && Integer.parseInt(num) >= MainActivity.regulations.getDRAW_POINT())||
-                        (regulation.getId() == 8 && Integer.parseInt(num) >= MainActivity.regulations.getWIN_POINT())
-                    ||(regulation.getId() == 7 && Integer.parseInt(num) <= MainActivity.regulations.getDRAW_POINT())){
+                if((regulation.getId() == 9 && Integer.parseInt(num) >= regulationList.get(7).getRegulationNum())||
+                        (regulation.getId() == 8 && Integer.parseInt(num) >= regulationList.get(6).getRegulationNum())
+                    ||(regulation.getId() == 7 && Integer.parseInt(num) <= regulationList.get(7).getRegulationNum())){
                     Toast.makeText(view.getContext(), "Điểm Thắng > Điểm Hòa > Điểm Thua", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
                 //kiểm tra priority từ 1->4
-                if(regulation.getId() == 10 &&(Integer.parseInt(num) > 4) ||(Integer.parseInt(num) == 0)){
+                if(regulation.getId() == 10 &&((Integer.parseInt(num) > 4) ||(Integer.parseInt(num) == 0))){
                     Toast.makeText(view.getContext(), "Ưu tiên chỉ từ 1->4", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -89,6 +103,7 @@ public class RegulationAdapter extends RecyclerView.Adapter<RegulationAdapter.Re
                 binding.edtRegulationNum.setText(num);
                 // Thay đổi quy định trong database
                 DatabaseRoute.changeRelutationById(regulation.getId(),Integer.parseInt(num));
+                regulationList.get(holder.getAdapterPosition()).setRegulationNum(Integer.parseInt(num));
                 Toast.makeText(view.getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
                 binding.tvRegulationNum.setVisibility(View.VISIBLE);
                 binding.edtRegulationNum.setVisibility(View.GONE);

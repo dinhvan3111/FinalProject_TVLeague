@@ -58,12 +58,11 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
         ItemGoalRowBinding binding = holder.getBinding();
         binding.tvPlayerName.setText(goal.getPlayer().getName());
         binding.tvGoalTime.setText(goal.getTime() + "'");
-        System.out.println("Typegoal: " + goal.getType());
         if(goal.getType() == 0){ // bàn thắng thường
-            binding.tvGoalType.setVisibility(View.GONE);
+            binding.tvGoalType.setText("");
         }
         if(goal.getType() == 1){ // Penalty
-            System.out.println("Typegoal: " + "pen");
+            System.out.println("penalty");
             binding.tvGoalType.setText("(P)");
         }
         if(goal.getType() == 2){ // Phản lưới nhà
