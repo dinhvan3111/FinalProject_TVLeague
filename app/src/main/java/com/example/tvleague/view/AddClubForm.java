@@ -34,6 +34,7 @@ public class AddClubForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddClubFormBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         adapter = new PlayerAdapter(this,listAddedPlayer);
         binding.listAddedPlayer.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         binding.listAddedPlayer.setAdapter(adapter);
